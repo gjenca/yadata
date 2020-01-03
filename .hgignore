@@ -1,0 +1,19 @@
+syntax: glob
+*.dvi
+*.pdf
+*.bbl
+*.blg
+*.log
+*~
+*.out
+*.eps
+*.aux
+*.pyc
+*.ps
+*.nav
+*.snm
+*.toc
+.directory
+*.spl
+*.png
+*.synctex.gz
