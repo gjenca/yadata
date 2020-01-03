@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+from yadata import Record
+from yadata import Datadir
+import yadata.sane_yaml as yaml
+import sys
+
+class Person(Record):
+
+    yadata_tag='Person'
+
+    @classmethod
+    def detect(cls,d):
+
+        return ('name' in d) and ('surname' in d)
+
+    def __eq__(self,other):
+
+        return self['name']==other['name'] and self['surname']==other['surname']
+
+    def get_key_prefix(self):
+
+        return self['surname'].lower()
+
+    subdir = 'Person'
+
+
+d={'name':'Gejza','surname':'Jenča'}
+p=Person(d)
+yaml.compact(seq_map=False)
+with open('out.yaml','w') as f:
+    yaml.dump(p,f)
+with open('out.yaml','r') as f:
+    l=yaml.load(f)
+    print(type(l))
+    print(l)
+
+
