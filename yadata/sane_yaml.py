@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import ruamel.yaml as yaml
+import yaml
 import functools
 
 def construct_yaml_str(self, node):
@@ -29,8 +29,6 @@ def load_all(f,**kwargs):
 
 yaml_load=yaml.load
 
-#def dump(obj,**kwargs):
-#    return yaml.dump(obj,encoding="utf-8",allow_unicode=True,**kwargs)
 dump=functools.partial(yaml.dump,allow_unicode=True,default_flow_style=False)
 load=yaml.safe_load
 

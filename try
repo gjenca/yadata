@@ -2,17 +2,17 @@
 
 from yadata import Record
 from yadata import Datadir
-import yadata.sane_yaml as yaml
+from yadata import YadataRecord 
 import sys
 
+@YadataRecord
 class Person(Record):
 
-    yadata_tag='Person'
+    yadata_tag='!Person'
 
     @classmethod
-    def detect(cls,d):
-
-        return ('name' in d) and ('surname' in d)
+    def is_my_type(cls,d):
+        return 'name' in d and 'surname' in d
 
     def __eq__(self,other):
 
@@ -25,14 +25,9 @@ class Person(Record):
     subdir = 'Person'
 
 
-d={'name':'Gejza','surname':'Jenča'}
-p=Person(d)
-yaml.compact(seq_map=False)
-with open('out.yaml','w') as f:
-    yaml.dump(p,f)
-with open('out.yaml','r') as f:
-    l=yaml.load(f)
-    print(type(l))
-    print(l)
-
+ddir=Datadir('data')
+for p in ddir:
+    print(p)
+    p['counter']+=1
+    p.save(ddir)
 

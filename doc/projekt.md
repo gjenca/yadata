@@ -31,10 +31,11 @@
 
 ## Trieda Datadir
 
- * podtrieda dict, nie podtrieda list
+ * nechať subclass list zatiaľ
 
 ## Inštancia Datadir
 
  * všetky záznamy musia byť zatypované
  * `__init__` importuje modul, v module sú podtriedy Record
  * má metódu `merge` - logika mergeovania je tu
+
