@@ -58,16 +58,16 @@ class Record(dict):
         if not self.dirty:
             return
         
-        if not "key" in self:
+        if not "_key" in self:
             for key in self.generate_keys():
                 if key not in datadir.keys:
-                    self["key"]=key
+                    self["_key"]=key
                     break
         
         if self.path is None:
             pathdir=os.path.join(datadir.dirname,self.subdir)
             mkdir_p(pathdir)
-            self.path=os.path.join(pathdir,("%s.yaml" % self["key"]))
+            self.path=os.path.join(pathdir,("%s.yaml" % self["_key"]))
         f=tempfile.NamedTemporaryFile(delete=False,mode='w')
         f.write(sane_yaml.dump(self))
         f.close()
@@ -100,7 +100,7 @@ class Record(dict):
 
     def merge(self,other,methods):
        
-        if "key" not in self:
+        if "_key" not in self:
             raise ValueError("Attempted to merge with a record without key")
         bounced={}
         for field in other:

@@ -11,8 +11,8 @@ class Datadir(list):
     def append(self,rec):
 
         list.append(self,rec)
-        if "key" in rec:
-            self.keys[rec["key"]]=rec
+        if "_key" in rec:
+            self.keys[rec["_key"]]=rec
 
     def __init__(self,modulename):
 
@@ -40,8 +40,8 @@ class Datadir(list):
 
     def list_matching(self,pattern):
 
-        if "key" in pattern and pattern["key"] in self.keys:
-            return [self.keys[pattern["key"]]]
+        if "_key" in pattern and pattern["_key"] in self.keys:
+            return [self.keys[pattern["_key"]]]
         else:
             return [rec for rec in self if rec == pattern]
     
