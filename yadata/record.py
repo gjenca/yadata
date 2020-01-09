@@ -74,7 +74,7 @@ class Record(dict):
         shutil.move(f.name,self.path)
 
     
-    def method_PUT(self,field,value):
+    def method_SET(self,field,value):
 
         self[field]=value
 
@@ -90,7 +90,7 @@ class Record(dict):
 
         del self[field]
    
-     method_dispatcher={
+    method_dispatcher={
         "set":method_SET,
         "union":method_UNION,
         "extend":method_EXTEND,
@@ -99,7 +99,7 @@ class Record(dict):
 
 
     def merge(self,other,methods):
-        
+       
         if "key" not in self:
             raise ValueError("Attempted to merge with a record without key")
         bounced={}
@@ -108,7 +108,7 @@ class Record(dict):
                 self[field]=other[field]
             elif self[field]!=other[field]:
                 if field not in methods:
-                    bounced[field]=other[field])
+                    bounced[field]=other[field]
                 else:
                     self.method_dispatcher[methods[field]](self,field,other[field])
         return bounced
