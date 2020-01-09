@@ -5,6 +5,7 @@
 
  * podtrieda dict
  * každý atribút je prípadne vybavený poznámkou (kvôli bounce)
+ * poznámky sa vypisujú iba pri zápise na stdout, nie pri .save(ddir)
  * atribút triedy: dict mapujúci názvy metód na metódy
 
 ## Inštancia Record (spoločná funkčnosť)
@@ -14,8 +15,8 @@
  * `merge(self,other,methods):`
    * mergni do seba tento objekt "rovný" tebe
    * `methods` - slovník `key -> method_name` (?)
- * metódy: GET, PUT, POST, DELETE (?) -- toto ešte zvážiť, REST je dobré ale nie vždy 
- * metódy vracajú status (!?) plus prípadne mergeovateľný objekt (GET, alebo bouncnuté kľúče)
+ * metódy: SET, POST, APPEND, DELETE
+ * metódy vracajú mergeovateľný objekt bouncnutých polí
 
 ## Podtrieda Record
 
@@ -32,6 +33,7 @@
 ## Trieda Datadir
 
  * nechať subclass list zatiaľ
+ * je tam ešte aj slovník ako to molo doteraz
 
 ## Inštancia Datadir
 
