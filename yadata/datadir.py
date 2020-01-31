@@ -5,6 +5,7 @@ import unicodedata
 import tempfile
 import shutil
 from .record import Record
+import _yadata_types 
 
 class Datadir(list):
 
@@ -21,8 +22,8 @@ class Datadir(list):
         mod=__import__(modulename)
         self.dirname=os.path.dirname(mod.__file__)
         self.record_types=[]
-        for name in dir(mod):
-            obj=getattr(mod,name)
+        for name in dir(_yadata_types):
+            obj=getattr(_yadata_types,name)
             if type(obj) is type and issubclass(obj,Record):
                 self.record_types.append(obj)
         if os.path.isdir(self.dirname):

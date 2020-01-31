@@ -36,6 +36,8 @@ class Record(dict):
 """
 
     def __init__(self,d):
+        if not self.is_my_type(d):
+           raise TypeError(f"Yadata type of {d} is not {type(self).yadata_tag}")
         self.path=None
         self.dirty=False
         dict.__init__(self,d)
