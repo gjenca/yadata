@@ -4,8 +4,5 @@ from yadata import Datadir
 
 ddir=Datadir('data')
 for p in ddir:
-    print(p)
-    to_merge=dict(p)
-    to_merge['counter']+=1
-    print(ddir.merge(to_merge,{'counter':'set'}))
+    for 
 
