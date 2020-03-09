@@ -113,4 +113,8 @@ class Record(dict):
                     bounced[field]=other[field]
                 else:
                     self.method_dispatcher[methods[field]](self,field,other[field])
-        return bounced
+        if bounced:
+            bounced["_key"]=self["_key"]
+            return bounced
+        else:
+            return {}
