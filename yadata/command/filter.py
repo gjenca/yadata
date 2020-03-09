@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-from yacite.command.command import YaciteCommand
+from yadata.command.command import YadataCommand
 import sys
-import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record,Argument
+import yadata.utils.sane_yaml as sane_yaml
+from yadata.utils.misc import describe_record,Argument
 
-class Filter(YaciteCommand):
+class Filter(YadataCommand):
     """reads YAML stream, evaluates a python expression in the context of the each record,
     outputs YAML stream with records for which expression returns True"""
     

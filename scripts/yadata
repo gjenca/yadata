@@ -3,12 +3,12 @@
 import sys
 import argparse
 
-import yadata.command.read
-import yadata.command.append
+import yadata.command
 
 c_map={
-    "read":yadata.command.read.Read,
-    "append":yadata.command.append.Append,
+    "read":yadata.command.Read,
+    "append":yadata.command.Append,
+    "filter":yadata.command.Filter,
 }
 
 parse=argparse.ArgumentParser()
