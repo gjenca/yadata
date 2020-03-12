@@ -4,11 +4,14 @@ import sys
 import argparse
 
 import yadata.command
+import _yadata_types
 
 c_map={
     "read":yadata.command.Read,
     "append":yadata.command.Append,
     "filter":yadata.command.Filter,
+    "exec":yadata.command.Exec,
+    "merge":yadata.command.Merge,
 }
 
 parse=argparse.ArgumentParser()

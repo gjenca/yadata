@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from yacite.command.command import YaciteCommand
+from yadata.command.command import YadataCommand
 import sys
-import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record, Argument, MexGroup
+import yadata.utils.sane_yaml as sane_yaml
+from yadata.utils.misc import describe_record, Argument, MexGroup
 
-class Exec(YaciteCommand):
+class Exec(YadataCommand):
     """reads YAML stream, executes a python statement on every record, outputs YAML stream
 """
 

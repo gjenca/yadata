@@ -46,7 +46,7 @@ class Datadir(list):
         else:
             return [rec for rec in self if rec == pattern]
     
-    def merge(self,dict_to_merge,methods):
+    def merge(self,dict_to_merge,methods,verbose_level):
 
         matching_records=self.list_matching(dict_to_merge)
         if not matching_records:
@@ -64,7 +64,7 @@ class Datadir(list):
                 raise ValueError("%d matching records for %s" % (len(matching_records),dict_to_merge))
             else:
                 matching_record=matching_records[0]
-                bounce=matching_record.merge(dict_to_merge,methods)
+                bounce=matching_record.merge(dict_to_merge,methods,verbose_level)
                 matching_record.save(self)
                 return bounce
 
