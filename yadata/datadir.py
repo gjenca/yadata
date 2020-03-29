@@ -58,13 +58,13 @@ class Datadir(list):
                     break
             else:
                 raise ValueError("Cannot recognise the type of %s" % dict_to_merge)
-            return {}
+            return {},[]
         else:
             if len(matching_records)>1:
                 raise ValueError("%d matching records for %s" % (len(matching_records),dict_to_merge))
             else:
                 matching_record=matching_records[0]
-                bounce=matching_record.merge(dict_to_merge,methods)
+                bounce,log_record=matching_record.merge(dict_to_merge,methods)
                 matching_record.save(self)
-                return bounce
+                return bounce,log_record
 

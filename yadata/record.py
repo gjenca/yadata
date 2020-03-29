@@ -31,6 +31,20 @@ def mkdir_p(path):
         else: 
             raise
 
+class LogEntry:
+    
+    def __init__(self,_key,method,fieldname,oldvalue,newvalue):
+
+        self._key=_key
+        self.method=method
+        self.fieldname=fieldname
+        self.oldvalue=oldvalue
+        self.newvalue=newvalue
+
+    def __repr__(self):
+
+        return f"_key={self._key}[{self.fieldname}] {self.oldvalue}->{self.newvalue} (method:{self.method})"
+
 class Record(dict):
     """ Base class for all types of records.
 """
@@ -105,16 +119,20 @@ class Record(dict):
         if "_key" not in self:
             raise ValueError("Attempted to merge with a record without key")
         bounced={}
+        log=[]
         for field in other:
             if field not in self:
                 self[field]=other[field]
+                log.append(LogEntry(self["_key"],"new-field",field,None,other[field]))
             elif self[field]!=other[field]:
                 if field not in methods:
                     bounced[field]=other[field]
                 else:
+                    old_value=self[field]
                     self.method_dispatcher[methods[field]](self,field,other[field])
+                    log.append(LogEntry(self["_key"],methods[field],field,old_value,self[field]))
         if bounced:
             bounced["_key"]=self["_key"]
-            return bounced
+            return bounced,log
         else:
-            return {}
+            return {},log

@@ -1,0 +1,3 @@
+#for rec in records:
+{{rec._key}}
+#endfor

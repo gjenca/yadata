@@ -60,16 +60,20 @@ class Merge(YadataCommand):
         bounced_records_num=0
         bounced_fields_num=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
-            bounced=self.datadir.merge(rec,self.methods)
+            bounced,log=self.datadir.merge(rec,self.methods)
             if self.ns.bounced:
                 if bounced:
                         print("---")
                         sys.stdout.write(sane_yaml.dump(bounced))
             elif self.verbose_level==2:
-                keys=list(bounced.keys())
-                keys.remove("_key")
-                print("merge: fields {} in record _key={} bounced".format(keys,rec["_key"]),
-                    file=sys.stderr)
+                bounced_fields=list(bounced.keys())
+                if "_key" in bounced_fields:
+                    bounced_fields.remove("_key")
+                if bounced_fields:
+                    print("merge: fields {} in record _key={} bounced".format(bounced_fields,rec["_key"]),
+                        file=sys.stderr)
+                for logentry in log:
+                    print(logentry,file=sys.stderr)
             elif self.verbose_level==1 and bounced:
                 bounced_records_num+=1
                 bounced_fields_num+=len(bounced)-1
