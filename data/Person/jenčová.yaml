@@ -1,5 +1,9 @@
 !Person
 _key: jenčová
+body:
+- 1
+- 2
+- 3
 counter: 1
 name: Anna
 surname: Jenčová

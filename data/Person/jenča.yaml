@@ -1,5 +1,9 @@
 !Person
 _key: jenča
+body:
+- 1
+- 2
+- 3
 counter: 1
 name: Gejza
 surname: Jenča

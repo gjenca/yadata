@@ -18,6 +18,11 @@ class Person(Record):
 
         return self['surname'].lower()
 
+    @property
+    def sumbody(self):
+
+        return sum(self['body'])
+
     subdir = 'Person'
 
 
