@@ -1,5 +1,8 @@
 !Person
 _key: jenča
-counter: 54
+counter: 1
 name: Gejza
 surname: Jenča
+tags:
+- tag1
+- tag2

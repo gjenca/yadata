@@ -12,6 +12,8 @@ c_map={
     "filter":yadata.command.Filter,
     "exec":yadata.command.Exec,
     "merge":yadata.command.Merge,
+    "sort":yadata.command.Sort,
+    "render":yadata.command.Render,
 }
 
 parse=argparse.ArgumentParser()

@@ -1,5 +1,8 @@
 !Person
 _key: jenčová
-counter: 54
+counter: 1
 name: Anna
 surname: Jenčová
+tags:
+- tag1
+- tag2

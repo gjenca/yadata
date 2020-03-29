@@ -57,9 +57,27 @@ class Merge(YadataCommand):
 
     def execute(self):
 
+        bounced_records_num=0
+        bounced_fields_num=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
-            bounced=self.datadir.merge(rec,self.methods,verbose_level=self.verbose_level)
-            if bounced and self.ns.bounced:
-                print("---")
-                sys.stdout.write(sane_yaml.dump(bounced))
+            bounced=self.datadir.merge(rec,self.methods)
+            if self.ns.bounced:
+                if bounced:
+                        print("---")
+                        sys.stdout.write(sane_yaml.dump(bounced))
+            elif self.verbose_level==2:
+                keys=list(bounced.keys())
+                keys.remove("_key")
+                print("merge: fields {} in record _key={} bounced".format(keys,rec["_key"]),
+                    file=sys.stderr)
+            elif self.verbose_level==1 and bounced:
+                bounced_records_num+=1
+                bounced_fields_num+=len(bounced)-1
+        if bounced_records_num and self.verbose_level>0 and not self.ns.bounced:
+                print("""{} fields in {} records bounced
+use -v to see bounced fields
+use -b to create mergeable stream of bounced records""".format(bounced_fields_num,bounced_records_num),
+                    file=sys.stderr)
+
+            
         

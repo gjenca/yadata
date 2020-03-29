@@ -4,7 +4,7 @@ import unicodedata
 
 def describe_record(i,rec):
     
-    return "record no. %d (key=%s)" % (i,rec.get("key","None")) 
+    return "record no. %d (_key=%s)" % (i,rec.get("_key","None")) 
 
 def strip_accents(s):
 
