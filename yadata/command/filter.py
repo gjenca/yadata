@@ -13,12 +13,6 @@ class Filter(YadataCommand):
     name="filter"
 
     arguments=(
-        Argument("--myown",
-            action='store_true',
-            help="filter applies only if myown == True, otherwise the record passes through"),
-        Argument("--notmyown",
-            action='store_true',
-            help="filter applies only if myown == False or undefined, otherwise the record passes through"),
         Argument("expr",help="python expression"),
         Argument("-f","--failed",action="store_true",help="output only the failed records,supress error message"),
         Argument("-m","--module",action="append",default=[],help="python module to import"),
@@ -35,16 +29,6 @@ class Filter(YadataCommand):
     def execute(self):
         exceptions=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
-            if self.ns.myown:
-                if (not "myown" in rec) or rec["myown"]==False:
-                    print("---")
-                    sys.stdout.write(sane_yaml.dump(rec))
-                    continue
-            if self.ns.notmyown:
-                if "myown" in rec and rec["myown"]:
-                    print("---")
-                    sys.stdout.write(sane_yaml.dump(rec))
-                    continue
             try:
                 d=dict(rec)
                 d.update(self.mods)
