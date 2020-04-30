@@ -37,6 +37,7 @@ class Exec(YadataCommand):
             if self.ns.restrict:
                 d=dict(rec)
                 d.update(self.mods)
+                d["_type"]=type(rec).__name__
                 tf=eval(self.ns.restrict,d)
             if tf:
                 try:

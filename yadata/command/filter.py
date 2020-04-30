@@ -32,6 +32,7 @@ class Filter(YadataCommand):
             try:
                 d=dict(rec)
                 d.update(self.mods)
+                d["_type"]=type(rec).__name__
                 tf=eval(self.ns.expr,d)
             except:
                 if self.ns.failed:
