@@ -6,6 +6,16 @@ import tempfile
 import yadata.sane_yaml as sane_yaml
 import yaml
 
+def YadataReferences(cls,*reference_fields):
+    
+    cls._references=references
+    return cls
+
+def YadataReferenceLists(cls,*reference_lists):
+
+    cls._reference_lists=reference_lists
+    return cls
+
 def YadataRecord(cls):
 
     def cls_representer(dumper,data):
@@ -48,6 +58,9 @@ class LogEntry:
 class Record(dict):
     """ Base class for all types of records.
 """
+
+    _references=[]
+    _reference_lists=[]
 
     def __init__(self,d):
         if not self.is_my_type(d):
