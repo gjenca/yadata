@@ -10,7 +10,7 @@ def YadataRecord(cls):
 
     def cls_representer(dumper,data):
 
-        return dumper.represent_mapping(cls.yadata_tag,dict(data),flow_style=False)
+        return dumper.represent_mapping(cls.yadata_tag,dict(data),flow_style=None)
 
     def cls_constructor(loader,node):
 

@@ -29,6 +29,8 @@ def load_all(f,**kwargs):
 
 yaml_load=yaml.load
 
-dump=functools.partial(yaml.dump,allow_unicode=True,default_flow_style=False)
-load=yaml.safe_load
+def dump(obj,*l,**d):
+    
+    d.update(allow_unicode=True)
+    return yaml.dump(obj,*l,**d)
 

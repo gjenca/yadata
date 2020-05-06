@@ -24,7 +24,7 @@ class Datadir(list):
         self.record_types=[]
         for name in dir(_yadata_types):
             obj=getattr(_yadata_types,name)
-            if type(obj) is type and issubclass(obj,Record):
+            if type(obj) is type and issubclass(obj,Record) and (obj is not Record):
                 self.record_types.append(obj)
         if os.path.isdir(self.dirname):
             for root,dirs,files in os.walk(self.dirname):
