@@ -3,17 +3,21 @@ import shutil
 import os
 import errno
 import tempfile
-import yadata.sane_yaml as sane_yaml
+import yadata.utils.sane_yaml as sane_yaml
 import yaml
+from collections import namedtuple
 
-def YadataReferences(cls,*reference_fields):
+ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','sort','inverse_sort'])
+OneToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','inverse_sort'])
+
+def AddManyToMany(cls,fieldname,inverse_fieldname,sort=None,inverse_sort=None):
     
-    cls._references=references
+    cls._many_to_many.append(ManyToMany(fieldname,inverse_fieldname,sort,inverse_sort))
     return cls
 
-def YadataReferenceLists(cls,*reference_lists):
+def AddOneToMany(cls,fieldname,inverse_fieldname,inverse_sort=None):
 
-    cls._reference_lists=reference_lists
+    cls._one_to_many.append(OneToMany(fieldname,inverse_fieldname,inverse_sort))
     return cls
 
 def YadataRecord(cls):
@@ -59,8 +63,8 @@ class Record(dict):
     """ Base class for all types of records.
 """
 
-    _references=[]
-    _reference_lists=[]
+    _many_to_many=[]
+    _one_to_many=[]
 
     def __init__(self,d):
         if not self.is_my_type(d):

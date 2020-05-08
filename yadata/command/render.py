@@ -32,6 +32,29 @@ class Render(YadataCommand):
     def execute(self):
         
         records=list(sane_yaml.load_all(sys.stdin))
+        records_new=[]
+        key_dict={}
+        for rec in records:
+            if "_key" in rec:
+                key_dict[rec["_key"]]=rec
+            records_new.append(rec)
+        records=records_new
+        for rec in records:
+            for otm in rec._one_to_many:
+                other=key_dict[rec[otm.fieldname]]
+                if otm.inverse_fieldname not in other:
+                    other[otm.inverse_fieldname]=[]
+                other[otm.inverse_fieldname].append(rec)
+                rec[otm.fieldname]=other
+            for mtm in rec._many_to_many:
+                all_others=[]
+                for other_key in rec[mtm.fieldname]:
+                    other=key_dict[other_key]
+                    if mtm.inverse_fieldname not in other:
+                        other[mtm.inverse_fieldname]=[]
+                    other[mtm.inverse_fieldname].append(rec)
+                    all_others.append(other)
+                rec[mtm_fieldname]=all_others
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix="#")
         t=env.get_template(self.ns.template)

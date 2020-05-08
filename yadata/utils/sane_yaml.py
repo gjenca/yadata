@@ -19,12 +19,6 @@ yaml.add_representer(str, unicode_representer)
 
 def load_all(f,**kwargs):
     for d in yaml.load_all(f,Loader=yaml.Loader,**kwargs):
-        for key in d:
-            if type(d[key]) is str:
-                try:
-                    d[key]=int(d[key])
-                except ValueError:
-                    pass
         yield d
 
 yaml_load=yaml.load
