@@ -10,15 +10,21 @@ from collections import namedtuple
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','sort','inverse_sort'])
 OneToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','inverse_sort'])
 
-def AddManyToMany(cls,fieldname,inverse_fieldname,sort=None,inverse_sort=None):
+def AddManyToMany(fieldname,inverse_fieldname,sort=None,inverse_sort=None):
+
+    def decorate(cls):
     
-    cls._many_to_many.append(ManyToMany(fieldname,inverse_fieldname,sort,inverse_sort))
-    return cls
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_fieldname,sort,inverse_sort))
+        return cls
+    return decorate
 
-def AddOneToMany(cls,fieldname,inverse_fieldname,inverse_sort=None):
+def AddOneToMany(fieldname,inverse_fieldname,inverse_sort=None):
 
-    cls._one_to_many.append(OneToMany(fieldname,inverse_fieldname,inverse_sort))
-    return cls
+    def decorate(cls):
+        
+        cls._one_to_many.append(OneToMany(fieldname,inverse_fieldname,inverse_sort))
+        return cls
+    return decorate
 
 def YadataRecord(cls):
 
