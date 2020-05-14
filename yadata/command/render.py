@@ -32,6 +32,8 @@ class Render(YadataCommand):
     def execute(self):
         
         records=list(sane_yaml.load_all(sys.stdin))
+        for rec in records:
+                rec["_type"]=type(rec).__name__
         records_new=[]
         key_dict={}
         for rec in records:

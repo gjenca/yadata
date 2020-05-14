@@ -6,24 +6,29 @@ import tempfile
 import yadata.utils.sane_yaml as sane_yaml
 import yaml
 from collections import namedtuple
+import sys
+sys.path.insert(0,'')
 
-ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','sort','inverse_sort'])
-OneToMany=namedtuple('ManyToMany',['fieldname','inverse_fieldname','inverse_sort'])
+ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort','inverse_sort'])
+OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort'])
 
 def AddManyToMany(fieldname,inverse_fieldname,sort=None,inverse_sort=None):
 
     def decorate(cls):
     
-        cls._many_to_many.append(ManyToMany(fieldname,inverse_fieldname,sort,inverse_sort))
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort,inverse_sort))
+        inverse_type._inverse.append(inverse_fieldname)
         return cls
     return decorate
 
-def AddOneToMany(fieldname,inverse_fieldname,inverse_sort=None):
+def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort=None):
 
     def decorate(cls):
         
-        cls._one_to_many.append(OneToMany(fieldname,inverse_fieldname,inverse_sort))
+        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort))
+        inverse_type._inverse.append(inverse_fieldname)
         return cls
+   
     return decorate
 
 def YadataRecord(cls):
@@ -65,12 +70,22 @@ class LogEntry:
 
         return f"_key={self._key}[{self.fieldname}] {self.oldvalue}->{self.newvalue} (method:{self.method})"
 
-class Record(dict):
+class MetaRecord(type):
+    
+    def __new__(cls,*args,**kwargs):
+        instance_class=super(MetaRecord,cls).__new__(cls,*args,**kwargs)
+        instance_class._many_to_many=[]
+        instance_class._one_to_many=[]
+        instance_class._inverse=[]
+        return instance_class
+
+class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
 """
 
-    _many_to_many=[]
-    _one_to_many=[]
+#    _many_to_many=[]
+#    _one_to_many=[]
+
 
     def __init__(self,d):
         if not self.is_my_type(d):
@@ -78,6 +93,15 @@ class Record(dict):
         self.path=None
         self.dirty=False
         dict.__init__(self,d)
+
+    def __new__(cls,*args,**kwargs):
+
+        instance=super(Record,cls).__new__(cls,*args,**kwargs)
+        for fieldname in cls._inverse:
+            instance[fieldname]=[]
+        return instance
+
+
 
     def __setitem__(self,key,value):
         self.dirty=True

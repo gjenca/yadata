@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import yaml
 import functools
+import yadata.record
 
 def construct_yaml_str(self, node):
     return self.construct_scalar(node)

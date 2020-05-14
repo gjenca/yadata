@@ -21,11 +21,6 @@ class Datadir(list):
         self.keys={}
         mod=__import__(modulename)
         self.dirname=os.path.dirname(mod.__file__)
-        self.record_types=[]
-        for name in dir(_yadata_types):
-            obj=getattr(_yadata_types,name)
-            if type(obj) is type and issubclass(obj,Record) and (obj is not Record):
-                self.record_types.append(obj)
         if os.path.isdir(self.dirname):
             for root,dirs,files in os.walk(self.dirname):
                 for name in files:
@@ -46,25 +41,19 @@ class Datadir(list):
         else:
             return [rec for rec in self if rec == pattern]
     
-    def merge(self,dict_to_merge,methods):
+    def merge(self,object_to_merge,methods):
 
-        matching_records=self.list_matching(dict_to_merge)
+        matching_records=self.list_matching(object_to_merge)
         if not matching_records:
-            for typ in self.record_types:
-                if typ.is_my_type(dict_to_merge):
-                    rec=typ(dict_to_merge)
-                    rec.dirty=True
-                    rec.save(self)
-                    break
-            else:
-                raise ValueError("Cannot recognise the type of %s" % dict_to_merge)
+            object_to_merge.dirty=True
+            object_to_merge.save(self)
             return {},[]
         else:
             if len(matching_records)>1:
-                raise ValueError("%d matching records for %s" % (len(matching_records),dict_to_merge))
+                raise ValueError("%d matching records for %s" % (len(matching_records),object_to_merge))
             else:
                 matching_record=matching_records[0]
-                bounce,log_record=matching_record.merge(dict_to_merge,methods)
+                bounce,log_record=matching_record.merge(object_to_merge,methods)
                 matching_record.save(self)
                 return bounce,log_record
 

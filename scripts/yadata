@@ -4,7 +4,7 @@ import sys
 import argparse
 
 import yadata.command
-import _yadata_types
+#import _yadata_types
 
 c_map={
     "read":yadata.command.Read,
