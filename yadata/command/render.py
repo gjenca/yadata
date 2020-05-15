@@ -5,10 +5,14 @@ import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 # pybtex API changed in version 0.20
 from yadata.command.command import YadataCommand
-from yadata.utils.compare import keys_to_cmp
+from yadata.utils.compare import keys_to_cmp,cmp_to_key
 from yadata.utils.misc import Argument
+from functools import lru_cache
 
+@lru_cache
+def make_key(key_tuple):
 
+  return cmp_to_key(keys_to_cmp(key_tuple))
 
 class Render(YadataCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
@@ -47,6 +51,7 @@ class Render(YadataCommand):
                 if otm.inverse_fieldname not in other:
                     other[otm.inverse_fieldname]=[]
                 other[otm.inverse_fieldname].append(rec)
+                other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
                 rec[otm.fieldname]=other
             for mtm in rec._many_to_many:
                 all_others=[]
@@ -57,10 +62,16 @@ class Render(YadataCommand):
                     other[mtm.inverse_fieldname].append(rec)
                     all_others.append(other)
                 rec[mtm_fieldname]=all_others
+
+        records_by_type={}
+        for rec in records:
+            if rec["_type"] not in records_by_type:
+                records_by_type[rec["_type"]]=[]
+            records_by_type[rec["_type"]].append(rec)
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix="#")
         t=env.get_template(self.ns.template)
-        sys.stdout.write(t.render(records=records,extra=self.extra))
+        sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra))
 
 
 
