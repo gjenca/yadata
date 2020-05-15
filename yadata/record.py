@@ -9,23 +9,23 @@ from collections import namedtuple
 import sys
 sys.path.insert(0,'')
 
-ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort','inverse_sort'])
-OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort'])
+ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
+OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
 
-def AddManyToMany(fieldname,inverse_fieldname,sort=None,inverse_sort=None):
+def AddManyToMany(fieldname,inverse_fieldname,sort_by=None,inverse_sort_by=None):
 
     def decorate(cls):
     
-        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort,inverse_sort))
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by,inverse_sort_by))
         inverse_type._inverse.append(inverse_fieldname)
         return cls
     return decorate
 
-def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort=None):
+def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None):
 
     def decorate(cls):
         
-        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort))
+        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by))
         inverse_type._inverse.append(inverse_fieldname)
         return cls
    
@@ -35,7 +35,11 @@ def YadataRecord(cls):
 
     def cls_representer(dumper,data):
 
-        return dumper.represent_mapping(cls.yadata_tag,dict(data),flow_style=None)
+        d=dict(data)
+        for inverse_field in cls._inverse:
+            if inverse_field in d:
+                del d[inverse_field]
+        return dumper.represent_mapping(cls.yadata_tag,d,flow_style=None)
 
     def cls_constructor(loader,node):
 
