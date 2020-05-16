@@ -70,7 +70,7 @@ class Merge(YadataCommand):
                 if "_key" in bounced_fields:
                     bounced_fields.remove("_key")
                 if bounced_fields:
-                    print("merge: fields {} in record _key={} bounced".format(bounced_fields,rec["_key"]),
+                    print("merge: fields {} in record number {} bounced".format(bounced_fields,i),
                         file=sys.stderr)
                 for logentry in log:
                     print(logentry,file=sys.stderr)
