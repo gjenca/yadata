@@ -23,8 +23,8 @@ class Sort(YadataCommand):
     )
 
     def __init__(self,ns):
-        self.ns=ns
-
+        
+        super(Sort,self).__init__(ns)
         if not self.ns.sort_key:
             raise ParameterError("sort: no key(s) given")
         self.mods={}

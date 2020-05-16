@@ -7,17 +7,18 @@ import yadata.command
 #import _yadata_types
 
 c_map={
-    "read":yadata.command.Read,
-    "append":yadata.command.Append,
-    "filter":yadata.command.Filter,
-    "exec":yadata.command.Exec,
-    "merge":yadata.command.Merge,
-    "sort":yadata.command.Sort,
-    "render":yadata.command.Render,
+    'read':yadata.command.Read,
+    'append':yadata.command.Append,
+    'filter':yadata.command.Filter,
+    'exec':yadata.command.Exec,
+    'merge':yadata.command.Merge,
+    'sort':yadata.command.Sort,
+    'render':yadata.command.Render,
+    'type':yadata.command.Type,
 }
 
 parse=argparse.ArgumentParser()
-subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
+subparsers=parse.add_subparsers(dest='command',help='The yacite subcommand you want to run')
 subparsers.required=True
 for cmd in c_map:
     cmd_class=c_map[cmd]
