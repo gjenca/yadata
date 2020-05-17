@@ -15,12 +15,11 @@ class Datadir(list):
         if "_key" in rec:
             self.keys[rec["_key"]]=rec
 
-    def __init__(self,modulename):
+    def __init__(self,dirname):
 
         list.__init__(self)
         self.keys={}
-        mod=__import__(modulename)
-        self.dirname=os.path.dirname(mod.__file__)
+        self.dirname=dirname
         if os.path.isdir(self.dirname):
             for root,dirs,files in os.walk(self.dirname):
                 for name in files:
