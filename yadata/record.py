@@ -105,8 +105,6 @@ class Record(dict,metaclass=MetaRecord):
             instance[fieldname]=[]
         return instance
 
-
-
     def __setitem__(self,key,value):
         self.dirty=True
         dict.__setitem__(self,key,value)
