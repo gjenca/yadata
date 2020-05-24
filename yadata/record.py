@@ -31,26 +31,6 @@ def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None):
    
     return decorate
 
-def YadataRecord(cls):
-
-    def cls_representer(dumper,data):
-
-        d=dict(data)
-        for inverse_field in cls._inverse:
-            if inverse_field in d:
-                del d[inverse_field]
-        return dumper.represent_mapping(cls.yadata_tag,d,flow_style=None)
-
-    def cls_constructor(loader,node):
-
-        dict_value=loader.construct_mapping(node)
-        return cls(dict_value)
-
-    yaml.add_representer(cls,cls_representer)
-    yaml.add_constructor(cls.yadata_tag,cls_constructor)
-
-    return cls
-
 def mkdir_p(path):
     try:
         os.makedirs(path)
@@ -77,10 +57,30 @@ class LogEntry:
 class MetaRecord(type):
     
     def __new__(cls,*args,**kwargs):
+        
         instance_class=super(MetaRecord,cls).__new__(cls,*args,**kwargs)
         instance_class._many_to_many=[]
         instance_class._one_to_many=[]
         instance_class._inverse=[]
+
+        if instance_class.__name__!='Record':
+
+            def cls_representer(dumper,data):
+
+                d=dict(data)
+                for inverse_field in instance_class._inverse:
+                    if inverse_field in d:
+                        del d[inverse_field]
+                return dumper.represent_mapping(instance_class.yadata_tag,d,flow_style=None)
+
+            def cls_constructor(loader,node):
+
+                dict_value=loader.construct_mapping(node)
+                return instance_class(dict_value)
+
+            yaml.add_representer(instance_class,cls_representer)
+            yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
+
         return instance_class
 
 class Record(dict,metaclass=MetaRecord):
