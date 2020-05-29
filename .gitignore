@@ -1,4 +1,3 @@
-syntax: glob
 *.dvi
 *.pdf
 *.bbl
