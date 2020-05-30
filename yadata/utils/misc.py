@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import unicodedata
 
 def describe_record(i,rec):
     
     return "record no. %d (_key=%s)" % (i,rec.get("_key","None")) 
-
-def strip_accents(s):
-
-    return unicodedata.normalize('NFKD',s).encode("ascii","ignore").decode("ascii")
 
 class Argument(object):
 
