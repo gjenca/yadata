@@ -5,7 +5,10 @@ import unicodedata
 import tempfile
 import shutil
 from .record import Record
-import _yadata_types 
+try:
+    import _yadata_types 
+except ModuleNotFoundError:
+    print('Warning: _yadata_types module not found',file=sys.stderr)
 
 class Datadir(list):
 
