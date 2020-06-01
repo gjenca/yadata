@@ -1,3 +1,0 @@
-# for rec in records:
-{{rec.name}} {{rec.surname}} {{rec.body}} {{rec.sumbody}}
-# endfor
