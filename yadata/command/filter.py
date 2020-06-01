@@ -19,6 +19,9 @@ class Filter(YadataCommand):
         Argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception"),
         )
 
+    data_in=True
+    data_out=True
+
     def __init__(self,ns):
         
         super(Filter,self).__init__(ns)
@@ -26,9 +29,9 @@ class Filter(YadataCommand):
         for m in self.ns.module:
             self.mods[m]=__import__(m)
 
-    def execute(self):
+    def execute(self,it):
         exceptions=0
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+        for i,rec in enumerate(it):
             try:
                 d=dict(rec)
                 d.update(self.mods)
@@ -38,8 +41,7 @@ class Filter(YadataCommand):
                 if self.ns.failed:
                     if '__builtins__' in rec:    
                         del rec['__builtins__']
-                    print("---")
-                    sys.stdout.write(sane_yaml.dump(rec))
+                    yield rec
                 elif self.ns.keep_going:
                     exceptions+=1
                     print("filter: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
@@ -48,8 +50,7 @@ class Filter(YadataCommand):
                     raise
             else:
                 if not self.ns.failed and tf:
-                    print("---")
-                    sys.stdout.write(sane_yaml.dump(rec))
+                    yield rec
 
         if exceptions and not self.ns.failed:
             print("exec: Warning: there were %d exceptions" % exceptions, file=sys.stderr)

@@ -17,10 +17,10 @@ class Read(YadataCommand):
         Argument("datadir",help="data directory"),
     )
 
+    data_in=False
+    data_out=True
 
-    def execute(self):
+    def execute(self,it=None):
         dd=Datadir(self.ns.datadir)
         for rec in dd:
-            print("---")
-            sys.stdout.write(sane_yaml.dump(rec))
-        
+            yield rec 

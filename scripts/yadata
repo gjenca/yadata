@@ -9,6 +9,7 @@ except ModuleNotFoundError:
    sys.exit(1)
 
 import yadata.command
+import yadata.utils.sane_yaml as sane_yaml
 
 c_map={
     'read':yadata.command.Read,
@@ -30,8 +31,14 @@ for cmd in c_map:
     cmd_class.add_arguments(subpar)
 ns=parse.parse_args()
 command=c_map[ns.command](ns)
-command.execute()
-
+if command.data_in:
+    out=command.execute(sane_yaml.load_all(sys.stdin))
+else:
+    out=command.execute()
+if command.data_out:
+    for rec in out:
+        sys.stdout.write('---\n')
+        sys.stdout.write(sane_yaml.dump(rec))
 
 
 

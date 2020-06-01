@@ -20,12 +20,12 @@ class Type(YadataCommand):
         
         super(Type,self).__init__(ns)
 
+    data_in=True
+    data_out=True
 
-    def execute(self):
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+    def execute(self,it):
+        for i,rec in enumerate(it):
             if (self.ns.keep_untyped and type(rec) is dict) or \
                 type(rec).__name__ in self.ns.types:
-                print('---')
-                sys.stdout.write(sane_yaml.dump(rec))
-
+                    yield rec
         

@@ -5,7 +5,7 @@ import sys
 from yadata.command.command import YadataCommand
 from yadata import Datadir
 import yadata.utils.sane_yaml as sane_yaml
-from yadata.utils.misc import describe_record, strip_accents, Argument, MexGroup
+from yadata.utils.misc import describe_record, Argument, MexGroup
 from yadata.command.command import YadataCommand
 import difflib
 
@@ -34,6 +34,9 @@ class Merge(YadataCommand):
         Argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream"),
     )
 
+    data_in=True
+    data_out=True
+    
     def __init__(self,ns):
         super(Merge,self).__init__(ns)
         self.fields_to_change=self.ns.uname+self.ns.sname+self.ns.dname
@@ -55,16 +58,15 @@ class Merge(YadataCommand):
         if self.ns.quiet:
             self.verbose_level=0
 
-    def execute(self):
+    def execute(self,it):
 
         bounced_records_num=0
         bounced_fields_num=0
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+        for i,rec in enumerate(it):
             bounced,log=self.datadir.merge(rec,self.methods)
             if self.ns.bounced:
                 if bounced:
-                        print("---")
-                        sys.stdout.write(sane_yaml.dump(bounced))
+                    yield bounced
             elif self.verbose_level==2:
                 bounced_fields=list(bounced.keys())
                 if "_key" in bounced_fields:

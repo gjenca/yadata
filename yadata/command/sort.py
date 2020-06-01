@@ -22,6 +22,9 @@ class Sort(YadataCommand):
             ),
     )
 
+    data_in=True
+    data_out=True
+
     def __init__(self,ns):
         
         super(Sort,self).__init__(ns)
@@ -33,14 +36,14 @@ class Sort(YadataCommand):
 
         self.cmp_keys=keys_to_cmp(self.ns.sort_key)
 
-    def execute(self):
+    def execute(self,it):
 
         l_other=[]
         if self.ns.restrict_to_type:
             self.ns.restrict=f'_type=="{self.ns.restrict_to_type}"'
         if self.ns.restrict:
             l=[]
-            l_orig=list(sane_yaml.load_all(sys.stdin))
+            l_orig=list(it)
             for rec in l_orig:
                 d=dict(rec)
                 d.update(self.mods)
@@ -51,15 +54,12 @@ class Sort(YadataCommand):
                 else:
                     l_other.append(rec)
         else:
-            l=list(sane_yaml.load_all(sys.stdin))
+            l=list(it)
         l.sort(key=cmp_to_key(self.cmp_keys))
-        for d in l:
-            print("---")
-            sys.stdout.write(sane_yaml.dump(d))
-        for d in l_other:
-            print("---")
-            sys.stdout.write(sane_yaml.dump(d))
-
+        for rec in l:
+            yield rec
+        for rec in l_other:
+            yield rec
 
 
 

@@ -26,6 +26,9 @@ class Render(YadataCommand):
         Argument("template",help="template file"),
     )
 
+    data_in=True
+    data_out=False
+
     def __init__(self,ns):
         self.ns=ns
         if ns.extra_yaml:
@@ -33,9 +36,9 @@ class Render(YadataCommand):
         else:
             self.extra=None
 
-    def execute(self):
+    def execute(self,it):
         
-        records=list(sane_yaml.load_all(sys.stdin))
+        records=list(it)
         for rec in records:
                 rec["_type"]=type(rec).__name__
         records_new=[]

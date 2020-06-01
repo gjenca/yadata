@@ -16,8 +16,11 @@ class Append(YadataCommand):
         Argument("string",nargs="+",help="these strings are appended to the value"),
     )
 
-    def execute(self):
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+    data_in=True
+    data_out=True
+
+    def execute(self,it):
+        for i,rec in enumerate(it):
             if self.ns.fieldname in rec:
                 value=rec[self.ns.fieldname]
                 if type(value) is not list:
@@ -28,9 +31,7 @@ class Append(YadataCommand):
                 rec[self.ns.fieldname]=value
             else:
                 rec[self.ns.fieldname]=[s for s in self.ns.string]
-            print("---")
-            sys.stdout.write(sane_yaml.dump(rec))
-
+            yield rec
                 
         
         

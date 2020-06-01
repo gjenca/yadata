@@ -22,6 +22,9 @@ class Exec(YadataCommand):
         Argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
     )
 
+    data_in=True
+    data_out=True
+
     def __init__(self,ns):
         
         super(Exec,self).__init__(ns)
@@ -30,9 +33,9 @@ class Exec(YadataCommand):
             self.mods[m]=__import__(m)
 
 
-    def execute(self):
+    def execute(self,it):
         exceptions=0
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+        for i,rec in enumerate(it):
             tf=True
             if self.ns.restrict:
                 d=dict(rec)
@@ -44,8 +47,7 @@ class Exec(YadataCommand):
                     exec(self.ns.statement, self.mods,rec)
                 except:
                     if self.ns.failed:
-                        print("---")
-                        sys.stdout.write(sane_yaml.dump(rec))
+                        yield rec
                     elif self.ns.keep_going:
                         exceptions+=1
                         print("exec: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
@@ -53,8 +55,7 @@ class Exec(YadataCommand):
                     else:
                         raise
             if not self.ns.no_output and not self.ns.failed:
-                print("---")
-                sys.stdout.write(sane_yaml.dump(rec))
+                yield rec
         if exceptions and not self.ns.failed:
             print("exec: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
             
