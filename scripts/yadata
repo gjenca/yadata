@@ -29,14 +29,30 @@ for cmd in c_map:
     cmd_class=c_map[cmd]
     subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__)
     cmd_class.add_arguments(subpar)
-ns=parse.parse_args()
-command=c_map[ns.command](ns)
-if command.data_in:
-    out=command.execute(sane_yaml.load_all(sys.stdin))
-else:
-    out=command.execute()
+
+argv_splitted=[]
+subcommand_argv=[]
+for arg in sys.argv[1:]:
+    if arg=='!':
+        argv_splitted.append(subcommand_argv)
+        subcommand_argv=[]
+    else:
+        subcommand_argv.append(arg)
+argv_splitted.append(subcommand_argv)
+it=None
+for i,subcommand_argv in enumerate(argv_splitted):
+    ns=parse.parse_args(subcommand_argv)
+    command=c_map[ns.command](ns)
+    if i==0 and command.data_in:
+        it=sane_yaml.load_all(sys.stdin)        
+    if command.data_in:
+        if it is None:
+            raise ValueError(f'subcommand {ns.command} without input data')
+        it=command.execute(it)
+    else:
+        it=command.execute()
 if command.data_out:
-    for rec in out:
+    for rec in it:
         sys.stdout.write('---\n')
         sys.stdout.write(sane_yaml.dump(rec))
 
