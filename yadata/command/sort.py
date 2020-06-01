@@ -2,7 +2,6 @@
 
 from yadata.command.command import YadataCommand
 import sys
-import yadata.utils.sane_yaml as sane_yaml
 from yadata.utils.compare import keys_to_cmp,cmp_to_key
 from yadata.utils.misc import Argument,MexGroup
 

@@ -2,7 +2,6 @@
 
 from yadata.command.command import YadataCommand
 import sys
-import yadata.utils.sane_yaml as sane_yaml
 from yadata.utils.misc import describe_record, Argument
 
 class Append(YadataCommand):

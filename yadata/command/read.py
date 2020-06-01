@@ -3,7 +3,6 @@
 from yadata.command.command import YadataCommand
 import os,sys
 
-import yadata.utils.sane_yaml as sane_yaml
 from yadata.utils.misc import Argument, MexGroup
 from yadata import Datadir
 

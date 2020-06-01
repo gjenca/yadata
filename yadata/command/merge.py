@@ -4,7 +4,6 @@ import sys
 
 from yadata.command.command import YadataCommand
 from yadata import Datadir
-import yadata.utils.sane_yaml as sane_yaml
 from yadata.utils.misc import describe_record, Argument, MexGroup
 from yadata.command.command import YadataCommand
 import difflib
