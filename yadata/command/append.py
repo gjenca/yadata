@@ -23,7 +23,7 @@ class Append(YadataCommand):
             if self.ns.fieldname in rec:
                 value=rec[self.ns.fieldname]
                 if type(value) is not list:
-                    raise DataError("append: expecting a list under %s in %s, got %s instead" %
+                    raise TypeError("append: expecting a list under %s in %s, got %s instead" %
                         (self.ns.fieldname,describe_record(i,rec),type(value)))
                 value.extend(self.ns.string)
                 value=list(set(value))

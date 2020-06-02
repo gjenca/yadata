@@ -40,7 +40,7 @@ class Merge(YadataCommand):
         super(Merge,self).__init__(ns)
         self.fields_to_change=self.ns.uname+self.ns.sname+self.ns.dname
         if len(self.fields_to_change)>len(set(self.fields_to_change)):
-            raise DataError("merge: duplicite fieldnames in options")
+            raise ValueError("merge: duplicite fieldnames in options")
         self.datadir=Datadir(self.ns.datadir)
         self.methods={}
 
