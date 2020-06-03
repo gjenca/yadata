@@ -16,8 +16,8 @@ class NameSpace(object):
 
 def test_append_existent():
 
-    t_in=TryRecord(dict(fieldname=["a","b","c"]))
-    t_should_out=TryRecord(dict(fieldname=["a","b","c","d"]))
+    t_in=TryRecord(fieldname=["a","b","c"])
+    t_should_out=TryRecord(fieldname=["a","b","c","d"])
     ns=NameSpace()
     ns.fieldname='fieldname'
     ns.string='d'
@@ -31,8 +31,8 @@ def test_append_existent():
 
 def test_append_nonexistent():
 
-    t_in=TryRecord(dict(fieldname=["a","b","c"]))
-    t_should_out=TryRecord(dict(fieldname=["a","b","c"],other_fieldname=["d"]))
+    t_in=TryRecord(fieldname=["a","b","c"])
+    t_should_out=TryRecord(fieldname=["a","b","c"],other_fieldname=["d"])
     ns=NameSpace()
     ns.fieldname='other_fieldname'
     ns.string='d'
@@ -47,7 +47,7 @@ def test_append_nonexistent():
     
 def test_append_nonlist():
 
-    t_in=TryRecord(dict(fieldname=1967))
+    t_in=TryRecord(fieldname=1967)
     ns=NameSpace()
     ns.fieldname='fieldname'
     ns.string='d'

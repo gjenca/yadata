@@ -14,8 +14,8 @@ MockNameSpace=namedtuple('MockNameSpace',['statement','no_output','failed','rest
 
 def test_exec_yes_output():
     
-    t_in=TryRecord(dict(fieldname=["a","b","c"]))
-    t_should_out=TryRecord(dict(fieldname=["a","b","c","d"]))
+    t_in=TryRecord(fieldname=["a","b","c"])
+    t_should_out=TryRecord(fieldname=["a","b","c","d"])
     ns=MockNameSpace(
         statement='fieldname.append("d")',
         no_output=False,
@@ -34,7 +34,7 @@ def test_exec_yes_output():
 
 def test_exec_no_output():
     
-    t_in=TryRecord(dict(fieldname=["a","b","c"]))
+    t_in=TryRecord(fieldname=["a","b","c"])
     ns=MockNameSpace(
         statement='fieldname.append("d")',
         no_output=True,
@@ -50,8 +50,8 @@ def test_exec_no_output():
 
 def test_exec_failed():
     
-    t_in=TryRecord(dict(fieldname="bumbac"))
-    t_should_out=TryRecord(dict(fieldname="bumbac"))
+    t_in=TryRecord(fieldname="bumbac")
+    t_should_out=TryRecord(fieldname="bumbac")
     ns=MockNameSpace(
         statement='fieldname.append("d")',
         no_output=False,
@@ -70,10 +70,10 @@ def test_exec_failed():
 
 def test_exec_restrict():
     
-    t_in_yes=TryRecord(dict(fieldname=["a","b","c"],ignore=False))
-    t_in_no=TryRecord(dict(fieldname=["x","y","z"],ignore=True))
-    t_should_out_yes=TryRecord(dict(fieldname=["a","b","c","d"],ignore=False))
-    t_should_out_no=TryRecord(dict(fieldname=["x","y","z"],ignore=True))
+    t_in_yes=TryRecord(fieldname=["a","b","c"],ignore=False)
+    t_in_no=TryRecord(fieldname=["x","y","z"],ignore=True)
+    t_should_out_yes=TryRecord(fieldname=["a","b","c","d"],ignore=False)
+    t_should_out_no=TryRecord(fieldname=["x","y","z"],ignore=True)
     
     ns=MockNameSpace(
         statement='fieldname.append("d")',
@@ -90,10 +90,10 @@ def test_exec_restrict():
 def test_exec_keep_going():
 
     
-    t_in_yes=TryRecord(dict(fieldname="bumbac"))
-    t_in_no=TryRecord(dict(fieldname=["x","y","z"]))
-    t_should_out_yes=TryRecord(dict(fieldname="bumbac"))
-    t_should_out_no=TryRecord(dict(fieldname=["x","y","z","d"]))
+    t_in_yes=TryRecord(fieldname="bumbac")
+    t_in_no=TryRecord(fieldname=["x","y","z"])
+    t_should_out_yes=TryRecord(fieldname="bumbac")
+    t_should_out_no=TryRecord(fieldname=["x","y","z","d"])
     
     ns=MockNameSpace(
         statement='fieldname.append("d")',
@@ -110,10 +110,10 @@ def test_exec_keep_going():
 def test_exec_module():
 
     
-    t_in_yes=TryRecord(dict(x=10.1))
-    t_in_no=TryRecord(dict(x=11.1))
-    t_should_out_yes=TryRecord(dict(x=10,y=11))
-    t_should_out_no=TryRecord(dict(x=11,y=12))
+    t_in_yes=TryRecord(x=10.1)
+    t_in_no=TryRecord(x=11.1)
+    t_should_out_yes=TryRecord(x=10,y=11)
+    t_should_out_no=TryRecord(x=11,y=12)
     
     ns=MockNameSpace(
         statement='y=math.ceil(x);x=math.floor(x)',
