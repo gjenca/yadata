@@ -1,11 +1,8 @@
 setup.py
-_yadata_types/__init__.py
-data/__init__.py
 scripts/yadata
 yadata/__init__.py
 yadata/datadir.py
 yadata/record.py
-yadata/sane_yaml.py
 yadata.egg-info/PKG-INFO
 yadata.egg-info/SOURCES.txt
 yadata.egg-info/dependency_links.txt
@@ -20,3 +17,4 @@ yadata/command/merge.py
 yadata/command/read.py
 yadata/command/render.py
 yadata/command/sort.py
+yadata/command/types.py
