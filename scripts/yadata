@@ -23,7 +23,7 @@ c_map={
 }
 
 parse=argparse.ArgumentParser()
-subparsers=parse.add_subparsers(dest='command',help='The yacite subcommand you want to run')
+subparsers=parse.add_subparsers(dest='command',help='The yadata subcommand you want to run')
 subparsers.required=True
 for cmd in c_map:
     cmd_class=c_map[cmd]
