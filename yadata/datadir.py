@@ -11,6 +11,8 @@ try:
 except ModuleNotFoundError:
     warnings.warn('_yadata_types module not found')
 
+from indexed_dir import deepscan_dir
+
 class Datadir(list):
 
     def append(self,rec):
@@ -24,18 +26,30 @@ class Datadir(list):
         list.__init__(self)
         self.keys={}
         self.dirname=dirname
-        if os.path.isdir(self.dirname):
-            for root,dirs,files in os.walk(self.dirname):
-                for name in files:
-                    if name.endswith(".yaml"):
-                        path=os.path.join(root,name)
-                        data=yaml.load(open(path),Loader=yaml.Loader)
-                        if not issubclass(type(data),Record):
-                            raise TypeError("File %s does not contain a Record subtype" % path)
-                        data.path=path
-                        self.append(data)
-        else:
-            raise NotADirectoryError("%s is not a directory" % dirname) 
+        self.cache=shelve.open(os.path.join(dirname,'.cache.db'))
+        deepscan_dir(dirname,self)
+        for path,data in self.cache.items():
+            data.path=path
+            self.append(data)
+        self.cache.close()
+
+    def create(self,path):
+        
+        data=yaml.load(open(path),Loader=yaml.Loader)
+        if not issubclass(type(data),Record):
+            raise TypeError("File %s does not contain a Record subtype" % path)
+        self.cache[filename]=data
+
+    def delete(self,path):
+
+        del self.cache[filename]
+
+    def update(self,path):
+
+        data=yaml.load(open(path),Loader=yaml.Loader)
+        if not issubclass(type(data),Record):
+            raise TypeError("File %s does not contain a Record subtype" % path)
+        self.cache[filename]=data
 
     def list_matching(self,pattern):
 
