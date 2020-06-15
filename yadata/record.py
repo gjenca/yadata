@@ -155,6 +155,7 @@ class Record(dict,metaclass=MetaRecord):
     def method_DELETE(self,field,value=None):
 
         del self[field]
+        self.dirty=True
    
     method_dispatcher={
         "set":method_SET,
