@@ -4,14 +4,16 @@ import yaml
 import unicodedata
 import tempfile
 import shutil
-from .record import Record
 import warnings
+import shelve
+
+from .record import Record
 try:
     import _yadata_types 
 except ModuleNotFoundError:
     warnings.warn('_yadata_types module not found')
 
-from indexed_dir import deepscan_dir
+from .indexed_dir import deepscan_dir
 
 class Datadir(list):
 
@@ -38,11 +40,11 @@ class Datadir(list):
         data=yaml.load(open(path),Loader=yaml.Loader)
         if not issubclass(type(data),Record):
             raise TypeError("File %s does not contain a Record subtype" % path)
-        self.cache[filename]=data
+        self.cache[path]=data
 
     def delete(self,path):
 
-        del self.cache[filename]
+        del self.cache[path]
 
     def update(self,path):
 

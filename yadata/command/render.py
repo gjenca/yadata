@@ -3,7 +3,6 @@
 import sys
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
-# pybtex API changed in version 0.20
 from yadata.command.command import YadataCommand
 from yadata.utils.compare import keys_to_cmp,cmp_to_key
 from yadata.utils.misc import Argument

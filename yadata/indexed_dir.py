@@ -17,7 +17,6 @@ def deepscan_dir(dirname,crud_object,indexfile=None):
             indexfile=os.path.join(dirname,'.index.db')
         index=shelve.open(indexfile)
         for root,dirs,files,dir_fd in os.fwalk(dirname):
-            root=root[len(dirname):]
             current_state=DirObject(files,dirs,dir_fd)
             if root not in index:
                 previous_state=DirObject([],[],None)
