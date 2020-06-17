@@ -51,7 +51,7 @@ class Datadir(list):
         data=yaml.load(open(path),Loader=yaml.Loader)
         if not issubclass(type(data),Record):
             raise TypeError("File %s does not contain a Record subtype" % path)
-        self.cache[filename]=data
+        self.cache[path]=data
 
     def list_matching(self,pattern):
 
