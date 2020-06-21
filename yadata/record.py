@@ -63,7 +63,7 @@ class MetaRecord(type):
         instance_class._one_to_many=[]
         instance_class._inverse=[]
 
-        if instance_class.__name__!='Record':
+        if 'yadata_tag' in dir(instance_class):
 
             def cls_representer(dumper,data):
 
