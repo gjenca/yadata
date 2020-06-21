@@ -14,6 +14,7 @@ class Filter(YadataCommand):
     arguments=(
         Argument("expr",help="python expression"),
         Argument("-f","--failed",action="store_true",help="output only the failed records,supress error message"),
+        Argument("-t","--type",help="apply filter only to records of this type"),
         Argument("-m","--module",action="append",default=[],help="python module to import"),
         Argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception"),
         )
@@ -31,6 +32,9 @@ class Filter(YadataCommand):
     def execute(self,it):
         exceptions=0
         for i,rec in enumerate(it):
+            if self.ns.type and self.ns.type!=type(rec).__name__:
+                yield rec
+                continue
             try:
                 d=dict(rec)
                 d.update(self.mods)
