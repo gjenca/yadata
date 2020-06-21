@@ -35,7 +35,15 @@ class Render(YadataCommand):
         else:
             self.extra=None
 
+
     def execute(self,it):
+
+        def records_by_type(typename):
+            ret=[]
+            for rec in records:
+                if typename==type(rec).__name__:
+                    ret.append(rec)
+            return ret
         
         records=list(it)
         for rec in records:
@@ -65,11 +73,6 @@ class Render(YadataCommand):
                     all_others.append(other)
                 rec[mtm_fieldname]=all_others
 
-        records_by_type={}
-        for rec in records:
-            if rec["_type"] not in records_by_type:
-                records_by_type[rec["_type"]]=[]
-            records_by_type[rec["_type"]].append(rec)
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix="#")
         t=env.get_template(self.ns.template)
