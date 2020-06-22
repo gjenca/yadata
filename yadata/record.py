@@ -12,7 +12,7 @@ sys.path.insert(0,'')
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
 OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
 
-def AddManyToMany(fieldname,inverse_fieldname,sort_by=None,inverse_sort_by=None):
+def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None):
 
     def decorate(cls):
     
