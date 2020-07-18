@@ -24,6 +24,18 @@ def load_all(f,**kwargs):
 
 yaml_load=yaml.load
 
-dump=functools.partial(yaml.dump,allow_unicode=True,default_flow_style=None,sort_keys=False)
+def dump(rec):
+
+    d_help={}
+    top_fields=['_key']+rec.top_fields
+    for fieldname in top_fields:
+        if fieldname in rec:
+            d_help[fieldname]=rec[fieldname]
+    for fieldname in rec:
+        if fieldname not in d_help:
+            d_help[fieldname]=rec[fieldname]
+    rec_help=(type(rec))(d_help)
+    return yaml.dump(rec_help,allow_unicode=True,default_flow_style=None,sort_keys=False)
+
 load=yaml.safe_load
 

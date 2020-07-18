@@ -90,6 +90,8 @@ class Record(dict,metaclass=MetaRecord):
 #    _many_to_many=[]
 #    _one_to_many=[]
 
+    top_fields=[]
+
 
     def __init__(self,*args,**kwargs):
         d=dict(*args,**kwargs)
