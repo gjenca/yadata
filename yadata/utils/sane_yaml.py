@@ -35,7 +35,7 @@ def dump(rec):
         if fieldname not in d_help:
             d_help[fieldname]=rec[fieldname]
     rec_help=(type(rec))(d_help)
-    return yaml.dump(rec_help,allow_unicode=True,default_flow_style=None,sort_keys=False)
+    return yaml.dump(rec_help,allow_unicode=True,default_flow_style=False,sort_keys=False)
 
 load=yaml.safe_load
 
