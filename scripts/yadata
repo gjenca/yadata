@@ -20,6 +20,7 @@ c_map={
     'sort':yadata.command.Sort,
     'render':yadata.command.Render,
     'type':yadata.command.Type,
+    'cast':yadata.command.Cast,
 }
 
 parse=argparse.ArgumentParser()

@@ -6,6 +6,7 @@ from .merge import Merge
 from .sort import Sort
 from .render import Render
 from .types import Type
+from .cast import Cast
 
 
 
