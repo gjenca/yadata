@@ -5,8 +5,7 @@ import argparse
 try:
     import _yadata_types
 except ModuleNotFoundError:
-   print('Error: _yadata_types module must be present',file=sys.stderr)
-   sys.exit(1)
+    pass
 
 import yadata.command
 import yadata.utils.sane_yaml as sane_yaml

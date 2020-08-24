@@ -2,6 +2,7 @@ setup.py
 scripts/yadata
 yadata/__init__.py
 yadata/datadir.py
+yadata/indexed_dir.py
 yadata/record.py
 yadata.egg-info/PKG-INFO
 yadata.egg-info/SOURCES.txt

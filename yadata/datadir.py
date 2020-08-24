@@ -11,7 +11,7 @@ from .record import Record
 try:
     import _yadata_types 
 except ModuleNotFoundError:
-    warnings.warn('_yadata_types module not found')
+    pass
 
 from .indexed_dir import deepscan_dir
 
