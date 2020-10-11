@@ -10,7 +10,7 @@ class TryRecord(Record):
     def is_my_type(cls,d):
         return True
 
-MockFilterNameSpace=namedtuple('MockFilterNameSpace',['expr','failed','module','keep_going'])
+MockFilterNameSpace=namedtuple('MockFilterNameSpace',['expr','failed','module','keep_going','type'])
 
 def test_filter_normal():
     
@@ -23,7 +23,8 @@ def test_filter_normal():
         expr='"a" in fieldname',
         failed=False,
         module=[],
-        keep_going=False
+        keep_going=False,
+        type=None,
     )
     exec_command=Filter(ns)
     iter_out=exec_command.execute([t_in_1,t_in_2,t_in_3])
@@ -40,7 +41,8 @@ def test_filter_module():
         expr='math.floor(number)>9',
         failed=False,
         module=['math'],
-        keep_going=False
+        keep_going=False,
+        type=None,
     )
     exec_command=Filter(ns)
     iter_out=exec_command.execute([t_in_1,t_in_2,t_in_3])
@@ -57,7 +59,9 @@ def test_filter_failed():
         expr='numberr==0',
         failed=True,
         module=[],
-        keep_going=False
+        keep_going=False,
+        type=None,
+
     )
     exec_command=Filter(ns)
     iter_out=exec_command.execute([t_in_1,t_in_2,t_in_3])
@@ -74,7 +78,8 @@ def test_filter_keep_going():
         expr='numberr>10',
         failed=False,
         module=[],
-        keep_going=True
+        keep_going=True,
+        type=None,
     )
     exec_command=Filter(ns)
     iter_out=exec_command.execute([t_in_1,t_in_2,t_in_3])

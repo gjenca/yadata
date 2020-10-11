@@ -3,7 +3,10 @@
 from yadata.command.command import YadataCommand
 import sys
 from yadata.utils.misc import describe_record, Argument
-import _yadata_types
+try:
+    import _yadata_types
+except ImportError:
+    pass
 
 class Cast(YadataCommand):
     """reads YAML stream, creates objects of a given type from each object, outputs"""
