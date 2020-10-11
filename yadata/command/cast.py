@@ -23,7 +23,7 @@ class Cast(YadataCommand):
 
     def execute(self,it):
         type_to_cast=getattr(_yadata_types,self.ns.type)
-        for i,rec in enumerate(it):
+        for rec in it:
             yield type_to_cast(rec)
              
         
