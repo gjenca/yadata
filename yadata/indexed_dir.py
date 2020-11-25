@@ -44,7 +44,7 @@ def deepscan_dir(dirname,crud_object,indexfile=None):
                         roots_to_delete.append(root_dirname)
             for root_dirname in roots_to_delete:
                 del index[root_dirname]
-            if index[root]!=current_state:
+            if root not in index or index[root]!=current_state:
                 index[root]=current_state
         index.close()
 
