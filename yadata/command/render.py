@@ -24,6 +24,7 @@ class Render(YadataCommand):
     arguments=(
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
         Argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates"),
+        Argument("-p","--jinja-prefix",default="#",help="jinja2 line statement prefix (default: #)"),
         Argument("template",help="template file"),
     )
 
@@ -89,7 +90,7 @@ class Render(YadataCommand):
                 rec[mtm.fieldname]=all_others
         
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
-            line_statement_prefix="#")
+            line_statement_prefix=self.ns.jinja_prefix)
         t=env.get_template(self.ns.template)
         sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
 

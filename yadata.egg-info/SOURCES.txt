@@ -11,6 +11,7 @@ yadata.egg-info/requires.txt
 yadata.egg-info/top_level.txt
 yadata/command/__init__.py
 yadata/command/append.py
+yadata/command/cast.py
 yadata/command/command.py
 yadata/command/execc.py
 yadata/command/filter.py
