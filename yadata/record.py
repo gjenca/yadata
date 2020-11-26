@@ -112,6 +112,13 @@ class Record(dict,metaclass=MetaRecord):
         self.dirty=True
         dict.__setitem__(self,key,value)
 
+    def __repr__(self):
+        
+        typename=type(self).__name__
+        dictrepr=dict.__repr__(self)
+
+        return f'{typename}({dictrepr})'
+
     def generate_keys(self):
 
         prefix=self.get_key_prefix()
