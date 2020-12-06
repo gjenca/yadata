@@ -4,16 +4,12 @@ import yaml
 import unicodedata
 import tempfile
 import shutil
-import warnings
-import shelve
-
 from .record import Record
+import warnings
 try:
     import _yadata_types 
 except ModuleNotFoundError:
     pass
-
-from .indexed_dir import deepscan_dir
 
 class Datadir(list):
 
@@ -28,30 +24,18 @@ class Datadir(list):
         list.__init__(self)
         self.keys={}
         self.dirname=dirname
-        self.cache=shelve.open(os.path.join(dirname,'.cache.db'))
-        deepscan_dir(dirname,self)
-        for path,data in self.cache.items():
-            data.path=path
-            self.append(data)
-        self.cache.close()
-
-    def create(self,path):
-        
-        data=yaml.load(open(path),Loader=yaml.Loader)
-        if not issubclass(type(data),Record):
-            raise TypeError("File %s does not contain a Record subtype" % path)
-        self.cache[path]=data
-
-    def delete(self,path):
-
-        del self.cache[path]
-
-    def update(self,path):
-
-        data=yaml.load(open(path),Loader=yaml.Loader)
-        if not issubclass(type(data),Record):
-            raise TypeError("File %s does not contain a Record subtype" % path)
-        self.cache[path]=data
+        if os.path.isdir(self.dirname):
+            for root,dirs,files in os.walk(self.dirname):
+                for name in files:
+                    if name.endswith(".yaml"):
+                        path=os.path.join(root,name)
+                        data=yaml.load(open(path),Loader=yaml.Loader)
+                        if not issubclass(type(data),Record):
+                            raise TypeError("File %s does not contain a Record subtype" % path)
+                        data.path=path
+                        self.append(data)
+        else:
+            raise NotADirectoryError("%s is not a directory" % dirname) 
 
     def list_matching(self,pattern):
 
