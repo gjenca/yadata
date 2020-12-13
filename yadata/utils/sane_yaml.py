@@ -34,8 +34,21 @@ def dump(rec):
     for fieldname in rec:
         if fieldname not in d_help:
             d_help[fieldname]=rec[fieldname]
+    for fieldname in d_help:
+        if issubclass(type(rec),yadata.record.Record) and \
+            fieldname in type(rec)._inverse:
+                continue
+        if type(d_help[fieldname]) is list:
+            has_list=True
+            break
+    else:
+        has_list=False
     rec_help=(type(rec))(d_help)
-    return yaml.dump(rec_help,allow_unicode=True,default_flow_style=None,sort_keys=False)
+    if has_list:
+        flow_style=None
+    else:
+        flow_style=False
+    return yaml.dump(rec_help,allow_unicode=True,default_flow_style=flow_style,sort_keys=False)
 
 load=yaml.safe_load
 
