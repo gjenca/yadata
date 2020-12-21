@@ -95,8 +95,6 @@ class Record(dict,metaclass=MetaRecord):
 
     def __init__(self,*args,**kwargs):
         d=dict(*args,**kwargs)
-        if not self.is_my_type(d):
-           raise TypeError(f"Yadata type of {d} is not {type(self).yadata_tag}")
         dict.__init__(self,d)
         self.path=None
         self.dirty=False
