@@ -27,7 +27,10 @@ yaml_load=yaml.load
 def dump(rec):
 
     d_help={}
-    top_fields=['_key']+rec.top_fields
+    if issubclass(type(rec),yadata.record.Record) :
+        top_fields=['_key']+rec.top_fields
+    else:
+        top_fields=['_key']
     for fieldname in top_fields:
         if fieldname in rec:
             d_help[fieldname]=rec[fieldname]
