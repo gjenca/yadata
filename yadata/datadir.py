@@ -42,7 +42,7 @@ class Datadir(list):
         if "_key" in pattern and pattern["_key"] in self.keys:
             return [self.keys[pattern["_key"]]]
         else:
-            return [rec for rec in self if rec == pattern]
+            return [rec for rec in self if type(rec)==type(pattern) and rec == pattern]
     
     def merge(self,object_to_merge,methods):
 
