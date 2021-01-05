@@ -24,6 +24,7 @@ class Render(YadataCommand):
     arguments=(
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
         Argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates"),
+        Argument("-s","--soft-references",action="store_true",help="do not fail for missing references"),
         Argument("-p","--jinja-prefix",default="#",help="jinja2 line statement prefix (default: #)"),
         Argument("template",help="template file"),
     )
@@ -51,19 +52,27 @@ class Render(YadataCommand):
         records=list(it)
         for rec in records:
                 rec["_type"]=type(rec).__name__
-        records_new=[]
+        #records_new=[]
         key_dict={}
+        # Create key dictionary
         for rec in records:
             if "_key" in rec:
                 key_dict[rec["_key"]]=rec
-            records_new.append(rec)
-        records=records_new
+            #records_new.append(rec)
+        #records=records_new
         edge_tags=defaultdict(lambda:[])
         for rec in records:
             for otm in rec._one_to_many:
                 m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',rec[otm.fieldname])
                 other_key=m.group('key')
-                other=key_dict[other_key]
+                if other_key not in self.ns.soft_references:
+                    continue
+                if other_key in key_dict:
+                    other=key_dict[other_key]
+                elif self.ns.soft_references:
+                    continue
+                else:
+                    raise KeyError(f'render: {other_key} missing, referenced in record {rec["_key"]} (try --soft-references?)')
                 if m.group('tags'):
                     for edge_tag in m.group('tags').split(','):
                         edge_tags[(otm.fieldname,rec['_key'],other_key)].append(edge_tag)
@@ -78,7 +87,12 @@ class Render(YadataCommand):
                 for other_key_tagged in rec[mtm.fieldname]:
                     m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',other_key_tagged)
                     other_key=m.group('key')
-                    other=key_dict[other_key]
+                    if other_key in key_dict:
+                        other=key_dict[other_key]
+                    elif self.ns.soft_references:
+                        continue
+                    else:
+                        raise KeyError(f'render: {other_key} missing, referenced in record {rec["_key"]} (try --soft-references?)')
                     if m.group('tags'):
                         for edge_tag in m.group('tags').split(','):
                             edge_tags[(mtm.fieldname,rec['_key'],other_key)].append(edge_tag)
