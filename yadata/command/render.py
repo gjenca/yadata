@@ -65,8 +65,6 @@ class Render(YadataCommand):
             for otm in rec._one_to_many:
                 m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',rec[otm.fieldname])
                 other_key=m.group('key')
-                if other_key not in self.ns.soft_references:
-                    continue
                 if other_key in key_dict:
                     other=key_dict[other_key]
                 elif self.ns.soft_references:
