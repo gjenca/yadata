@@ -25,7 +25,7 @@ class Render(YadataCommand):
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
         Argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates"),
         Argument("-s","--soft-references",action="store_true",help="do not fail for missing references"),
-        Argument("-p","--jinja-prefix",default="#",help="jinja2 line statement prefix (default: #)"),
+        Argument("-p","--jinja-prefix",default="#",help="jinja2 line statement prefix (default: #, for markdown: %%)"),
         Argument("template",help="template file"),
     )
 
@@ -34,6 +34,8 @@ class Render(YadataCommand):
 
     def __init__(self,ns):
         self.ns=ns
+        if self.ns.template.endswith('.md'):
+            self.ns.jinja_prefix='%%'
         if ns.extra_yaml:
             self.extra=sane_yaml.load(ns.extra_yaml)
         else:
