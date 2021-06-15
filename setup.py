@@ -8,7 +8,7 @@ setup (name="yadata",
        description="Managing your data the UNIX way",
        author="Gejza Jenča",
        author_email="gejza.jenca@stuba.sk",
-       url="http://bitbucket.org/gjenca/yadata",
+       url="http://github.com/gjenca/yadata",
        install_requires=[
             "pyyaml","jinja2"
         ],
