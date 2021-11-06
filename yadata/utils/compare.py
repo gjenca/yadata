@@ -36,7 +36,7 @@ def keys_to_cmp(sort_keys):
     def cmp_keys(d1,d2):
 
         for sgn,fieldname in sgn_fieldnames:
-            if type(d1[fieldname]) is str:
+            if type(d1[fieldname]) is str and type(d2[fieldname]) is str:
                 c=locale.strcoll(d1[fieldname],d2[fieldname])*sgn
             else:
                 c=cmp(d1[fieldname],d2[fieldname])*sgn
