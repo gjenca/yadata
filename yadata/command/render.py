@@ -90,16 +90,21 @@ class Render(YadataCommand):
             for mtm in rec._many_to_many:
                 all_others=[]
                 for other_key_tagged in rec[mtm.fieldname]:
-                    m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',other_key_tagged)
-                    other_key=m.group('key')
+                    if type(other_key_tagged) is str:
+                        m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',other_key_tagged)
+                        other_key=m.group('key')
+                        tags=m.group('tags')
+                    else:
+                        other_key=other_key_tagged
+                        tags=''
                     if other_key in key_dict:
                         other=key_dict[other_key]
                     elif self.ns.soft_references:
                         continue
                     else:
                         raise KeyError(f'render: {other_key} missing, referenced in record {rec["_key"]} (try --soft-references?)')
-                    if m.group('tags'):
-                        for edge_tag in m.group('tags').split(','):
+                    if tags:
+                        for edge_tag in tags.split(','):
                             edge_tags[(mtm.fieldname,rec['_key'],other_key)].append(edge_tag)
                             edge_tags[(mtm.inverse_fieldname,other_key,rec['_key'])].append(edge_tag)
                     if mtm.inverse_fieldname not in other:
