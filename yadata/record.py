@@ -93,6 +93,12 @@ class Record(dict,metaclass=MetaRecord):
     top_fields=[]
 
 
+    @classmethod
+    @property
+    def yadata_tag(cls):
+
+        return '!'+cls.__name__
+
     def __init__(self,*args,**kwargs):
         d=dict(*args,**kwargs)
         dict.__init__(self,d)
@@ -145,6 +151,7 @@ class Record(dict,metaclass=MetaRecord):
         f.write(sane_yaml.dump(self))
         f.close()
         shutil.move(f.name,self.path)
+        datadir.append(self)
 
     
     def method_SET(self,field,value):
