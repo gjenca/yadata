@@ -50,6 +50,7 @@ class Datadir(list):
         if not matching_records:
             object_to_merge.dirty=True
             object_to_merge.save(self)
+            self.append(object_to_merge)
             return {},[]
         else:
             if len(matching_records)>1:

@@ -151,7 +151,6 @@ class Record(dict,metaclass=MetaRecord):
         f.write(sane_yaml.dump(self))
         f.close()
         shutil.move(f.name,self.path)
-        datadir.append(self)
 
     
     def method_SET(self,field,value):
