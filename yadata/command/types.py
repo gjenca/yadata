@@ -12,7 +12,7 @@ class Type(YadataCommand):
 
     arguments=(
         Argument('-u','--keep-untyped',action='store_true',help='keep untyped objects (plain dicts)'),
-        Argument('types',action='append',help='selected types'),
+        Argument('types',nargs='+',help='selected types'),
         )
 
     def __init__(self,ns):
