@@ -21,6 +21,7 @@ c_map={
     'type':yadata.command.Type,
     'cast':yadata.command.Cast,
     'run':yadata.command.Run,
+    'yield':yadata.command.Yield,
 }
 
 parse=argparse.ArgumentParser()

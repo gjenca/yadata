@@ -27,30 +27,34 @@ yaml_load=yaml.load
 def dump(rec):
 
     d_help={}
-    if issubclass(type(rec),yadata.record.Record) :
-        top_fields=['_key']+rec.top_fields
+    flow_style=None
+    if issubclass(type(rec),dict):
+        if issubclass(type(rec),yadata.record.Record) :
+                top_fields=['_key']+rec.top_fields
+        else:
+            top_fields=['_key']
+        for fieldname in top_fields:
+            if fieldname in rec:
+                d_help[fieldname]=rec[fieldname]
+        for fieldname in rec:
+            if fieldname not in d_help:
+                d_help[fieldname]=rec[fieldname]
+        for fieldname in d_help:
+            if issubclass(type(rec),yadata.record.Record) and \
+                fieldname in type(rec)._inverse:
+                    continue
+            if type(d_help[fieldname]) is list:
+                has_list=True
+                break
+        else:
+            has_list=False
+        rec_help=(type(rec))(d_help)
+        if has_list:
+            flow_style=None
+        else:
+            flow_style=False
     else:
-        top_fields=['_key']
-    for fieldname in top_fields:
-        if fieldname in rec:
-            d_help[fieldname]=rec[fieldname]
-    for fieldname in rec:
-        if fieldname not in d_help:
-            d_help[fieldname]=rec[fieldname]
-    for fieldname in d_help:
-        if issubclass(type(rec),yadata.record.Record) and \
-            fieldname in type(rec)._inverse:
-                continue
-        if type(d_help[fieldname]) is list:
-            has_list=True
-            break
-    else:
-        has_list=False
-    rec_help=(type(rec))(d_help)
-    if has_list:
-        flow_style=None
-    else:
-        flow_style=False
+        rec_help=rec
     return yaml.dump(rec_help,allow_unicode=True,default_flow_style=flow_style,sort_keys=False)
 
 load=yaml.safe_load
