@@ -85,7 +85,8 @@ class Render(YadataCommand):
                 if otm.inverse_fieldname not in other:
                     other[otm.inverse_fieldname]=[]
                 other[otm.inverse_fieldname].append(rec)
-                other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
+                if otm.inverse_sort_by:
+                    other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
                 rec[otm.fieldname]=other
             for mtm in rec._many_to_many:
                 all_others=[]
