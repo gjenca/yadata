@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0,'')
 
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
-OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
+OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by','forward'])
 
 def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None):
 
@@ -21,11 +21,11 @@ def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_
         return cls
     return decorate
 
-def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None):
+def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None,forward=True):
 
     def decorate(cls):
         
-        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by))
+        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by,forward))
         inverse_type._inverse.append(inverse_fieldname)
         return cls
    
@@ -122,6 +122,10 @@ class Record(dict,metaclass=MetaRecord):
         dictrepr=dict.__repr__(self)
 
         return f'{typename}({dictrepr})'
+
+    def to_yaml(self):
+
+        return sane_yaml.dump(self)
 
     def generate_keys(self):
 
