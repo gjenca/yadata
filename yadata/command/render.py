@@ -5,15 +5,11 @@ import re
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 from yadata.command.command import YadataCommand
-from yadata.utils.compare import keys_to_cmp,cmp_to_key
+from yadata.utils.compare import make_key
 from yadata.utils.misc import Argument
 from functools import lru_cache
 from collections import defaultdict
 
-@lru_cache
-def make_key(key_tuple):
-
-  return cmp_to_key(keys_to_cmp(key_tuple))
 
 class Render(YadataCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream

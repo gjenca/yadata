@@ -4,8 +4,10 @@ import os
 import errno
 import tempfile
 import yadata.utils.sane_yaml as sane_yaml
+from yadata.utils.compare import keys_to_cmp
 import yaml
 from collections import namedtuple
+from functools import total_ordering
 import sys
 sys.path.insert(0,'')
 
@@ -80,6 +82,18 @@ class MetaRecord(type):
 
             yaml.add_representer(instance_class,cls_representer)
             yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
+
+        if 'yadata_sort_by' in dir(instance_class):
+
+            sort_by=instance_class.yadata_sort_by
+            if type(sort_by) is str:
+                sort_by=(sort_by,)
+
+            def instance_class_lt(self,other):
+                return (keys_to_cmp(sort_by)(self,other))<0
+
+            instance_class.__lt__=instance_class_lt
+            instance_class=total_ordering(instance_class)
 
         return instance_class
 
