@@ -4,6 +4,7 @@ import os
 import errno
 import tempfile
 import yadata.utils.sane_yaml as sane_yaml
+from yadata.utils.compare import keys_to_cmp
 import yaml
 from collections import namedtuple
 import functools
@@ -11,7 +12,7 @@ import sys
 sys.path.insert(0,'')
 
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
-OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
+OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by','forward'])
 
 def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None):
 
@@ -22,11 +23,11 @@ def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_
         return cls
     return decorate
 
-def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None):
+def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None,forward=True):
 
     def decorate(cls):
         
-        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by))
+        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by,forward))
         inverse_type._inverse.append(inverse_fieldname)
         return cls
    
@@ -82,6 +83,18 @@ class MetaRecord(type):
             yaml.add_representer(instance_class,cls_representer)
             yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
 
+        if 'yadata_sort_by' in dir(instance_class):
+
+            sort_by=instance_class.yadata_sort_by
+            if type(sort_by) is str:
+                sort_by=(sort_by,)
+
+            def instance_class_lt(self,other):
+                return (keys_to_cmp(sort_by)(self,other))<0
+
+            instance_class.__lt__=instance_class_lt
+            instance_class=functools.total_ordering(instance_class)
+
         return instance_class
 
 @functools.total_ordering
@@ -132,6 +145,9 @@ class Record(dict,metaclass=MetaRecord):
         return hash(self)<hash(other)
 
         
+    def to_yaml(self):
+
+        return sane_yaml.dump(self)
 
     def generate_keys(self):
 

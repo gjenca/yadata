@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import locale
-from functools import total_ordering
+from functools import total_ordering,cache
+
+@cache
+def make_key(key_tuple):
+
+  return cmp_to_key(keys_to_cmp(key_tuple))
 
 def cmp_to_key(mycmp):
     'Convert a cmp= function into a key= function'
@@ -23,6 +28,7 @@ def cmp(val1,val2):
         return -1
     return 0
 
+@cache
 def keys_to_cmp(sort_keys):
 
     locale.setlocale(locale.LC_COLLATE,"")

@@ -5,15 +5,11 @@ import re
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 from yadata.command.command import YadataCommand
-from yadata.utils.compare import keys_to_cmp,cmp_to_key
+from yadata.utils.compare import make_key
 from yadata.utils.misc import Argument
 from functools import lru_cache
 from collections import defaultdict
 
-@lru_cache
-def make_key(key_tuple):
-
-  return cmp_to_key(keys_to_cmp(key_tuple))
 
 class Render(YadataCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
@@ -87,7 +83,8 @@ class Render(YadataCommand):
                 other[otm.inverse_fieldname].append(rec)
                 if otm.inverse_sort_by:
                     other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
-                rec[otm.fieldname]=other
+                if otm.forward:
+                    rec[otm.fieldname]=other
             for mtm in rec._many_to_many:
                 all_others=[]
                 for other_key_tagged in rec[mtm.fieldname]:

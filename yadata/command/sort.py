@@ -28,12 +28,11 @@ class Sort(YadataCommand):
         
         super(Sort,self).__init__(ns)
         if not self.ns.sort_key:
-            raise ParameterError("sort: no key(s) given")
+            raise ValueError("sort: no key(s) given")
         self.mods={}
         for m in self.ns.module:
             self.mods[m]=__import__(m)
-
-        self.cmp_keys=keys_to_cmp(self.ns.sort_key)
+        self.cmp_keys=keys_to_cmp(tuple(self.ns.sort_key))
 
     def execute(self,it):
 

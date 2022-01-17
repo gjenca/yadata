@@ -1,4 +1,5 @@
 .gitignore
+LICENSE
 setup.py
 doc/Makefile
 doc/projekt.html
@@ -35,6 +36,7 @@ yadata/command/render.py
 yadata/command/run.py
 yadata/command/sort.py
 yadata/command/types.py
+yadata/command/yieldd.py
 yadata/utils/compare.py
 yadata/utils/misc.py
 yadata/utils/sane_yaml.py
