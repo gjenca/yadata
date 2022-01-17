@@ -6,6 +6,7 @@ import tempfile
 import yadata.utils.sane_yaml as sane_yaml
 import yaml
 from collections import namedtuple
+import functools
 import sys
 sys.path.insert(0,'')
 
@@ -83,6 +84,7 @@ class MetaRecord(type):
 
         return instance_class
 
+@functools.total_ordering
 class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
 """
@@ -122,6 +124,14 @@ class Record(dict,metaclass=MetaRecord):
         dictrepr=dict.__repr__(self)
 
         return f'{typename}({dictrepr})'
+
+    def __lt__(self,other):
+        
+        if '_key' in self and '_key' in other:
+            return self['_key']<other['_key']
+        return hash(self)<hash(other)
+
+        
 
     def generate_keys(self):
 

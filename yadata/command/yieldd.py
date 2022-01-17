@@ -7,7 +7,7 @@ from yadata.utils.misc import describe_record, Argument, MexGroup
 
 class Yield(YadataCommand):
     """reads object stream, evaluates a python term in a namespace where 
-the current record is called 'self'. Writes the resulting object.
+the current record is called 'self'. Writes the resulting objects to an object stream.
 """
 
     name="yield"
