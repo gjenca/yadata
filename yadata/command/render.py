@@ -46,8 +46,11 @@ class Render(YadataCommand):
                 if typename==type(rec).__name__:
                     ret.append(rec)
             return ret
-        
-        records=list(it)
+        try:
+            import py_linq
+            records=py_linq.Enumerable(it)
+        except ImportError:
+            records=list(it)
         for rec in records:
                 rec["_type"]=type(rec).__name__
         #records_new=[]
@@ -110,11 +113,16 @@ class Render(YadataCommand):
                     other[mtm.inverse_fieldname].append(rec)
                     all_others.append(other)
                 rec[mtm.fieldname]=all_others
-        
-        env=Environment(loader=FileSystemLoader(self.ns.template_dir),
-            line_statement_prefix=self.ns.jinja_prefix)
-        t=env.get_template(self.ns.template)
-        sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
+        if '.mako.' in self.ns.template:
+            from mako.lookup import TemplateLookup
+            mylookup=TemplateLookup(directories=[self.ns.template_dir])
+            template=mylookup.get_template(self.ns.template)
+            sys.stdout.write(template.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
+        else:
+            env=Environment(loader=FileSystemLoader(self.ns.template_dir),
+                line_statement_prefix=self.ns.jinja_prefix)
+            t=env.get_template(self.ns.template)
+            sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
 
 
 
