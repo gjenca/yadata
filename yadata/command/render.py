@@ -46,8 +46,11 @@ class Render(YadataCommand):
                 if typename==type(rec).__name__:
                     ret.append(rec)
             return ret
-        
-        records=list(it)
+        try:
+            import py_linq
+            records=py_linq.Enumerable(it)
+        except ImportError:
+            records=list(it)
         for rec in records:
                 rec["_type"]=type(rec).__name__
         #records_new=[]
