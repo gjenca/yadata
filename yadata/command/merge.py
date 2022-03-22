@@ -3,13 +3,22 @@
 import sys
 
 from yadata.command.command import YadataCommand
-from yadata import Datadir
+from yadata import Datadir,Record
 from yadata.utils.misc import describe_record, Argument, MexGroup
 from yadata.command.command import YadataCommand
 import difflib
 
 def isjunk(s):
     return s.isspace()
+
+def _passthis(it):
+    
+    l=list(it)
+    if not all(issubclass(type(rec),Record) for rec in l):
+        print('You are attempting to merge something that is not a subclass of yadata.Record; you should probably run `yadata cast` first.',file=sys.stderr
+        )
+        sys.exit(1)
+    return iter(l)    
 
 
 class Merge(YadataCommand):
@@ -61,9 +70,11 @@ class Merge(YadataCommand):
 
     def execute(self,it):
 
+
         bounced_records_num=0
         bounced_fields_num=0
-        for i,rec in enumerate(it):
+
+        for i,rec in enumerate(_passthis(it)):
             if self.ns.old or self.ns.new:
                 matching_records=self.datadir.list_matching(rec)
                 if len(matching_records)>1:

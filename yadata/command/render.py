@@ -109,7 +109,8 @@ class Render(YadataCommand):
                         other[mtm.inverse_fieldname]=[]
                     other[mtm.inverse_fieldname].append(rec)
                     all_others.append(other)
-                rec[mtm.fieldname]=all_others
+                if mtm.forward:
+                    rec[mtm.fieldname]=all_others
         
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix=self.ns.jinja_prefix)

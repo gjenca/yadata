@@ -11,14 +11,14 @@ import functools
 import sys
 sys.path.insert(0,'')
 
-ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
+ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by','forward'])
 OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by','forward'])
 
-def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None):
+def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None,forward=True):
 
     def decorate(cls):
     
-        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by,inverse_sort_by))
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by,inverse_sort_by,forward))
         inverse_type._inverse.append(inverse_fieldname)
         return cls
     return decorate
