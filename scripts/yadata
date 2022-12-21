@@ -29,7 +29,7 @@ subparsers=parse.add_subparsers(dest='command',help='The yadata subcommand you w
 subparsers.required=True
 for cmd in c_map:
     cmd_class=c_map[cmd]
-    subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__)
+    subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__,description=cmd_class.__doc__)
     cmd_class.add_arguments(subpar)
 
 argv_splitted=[]

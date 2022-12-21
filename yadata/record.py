@@ -115,6 +115,7 @@ class Record(dict,metaclass=MetaRecord):
         return '!'+cls.__name__
 
     def __init__(self,*args,**kwargs):
+        
         d=dict(*args,**kwargs)
         dict.__init__(self,d)
         self.path=None
