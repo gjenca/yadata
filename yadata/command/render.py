@@ -53,14 +53,11 @@ class Render(YadataCommand):
             records=list(it)
         for rec in records:
                 rec["_type"]=type(rec).__name__
-        #records_new=[]
         key_dict={}
         # Create key dictionary
         for rec in records:
             if "_key" in rec:
                 key_dict[rec["_key"]]=rec
-            #records_new.append(rec)
-        #records=records_new
         edge_tags=defaultdict(lambda:[])
         for rec in records:
             for otm in rec._one_to_many:
@@ -84,8 +81,8 @@ class Render(YadataCommand):
                 if otm.inverse_fieldname not in other:
                     other[otm.inverse_fieldname]=[]
                 other[otm.inverse_fieldname].append(rec)
-                if otm.inverse_sort_by:
-                    other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
+                #if otm.inverse_sort_by:
+                #    other[otm.inverse_fieldname].sort(key=make_key(otm.inverse_sort_by))
                 if otm.forward:
                     rec[otm.fieldname]=other
             for mtm in rec._many_to_many:
@@ -114,7 +111,13 @@ class Render(YadataCommand):
                     all_others.append(other)
                 if mtm.forward:
                     rec[mtm.fieldname]=all_others
-        
+        sort_these=set()
+        for rec in records:
+            for otm in rec._one_to_many:
+                if otm.inverse_sort_by:
+                    sort_these.add((rec[otm.fieldname]['_key'],otm.inverse_fieldname,otm.inverse_sort_by))
+        for key,fieldname,sort_by in sort_these:
+                key_dict[key][fieldname].sort(key=make_key(sort_by))
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix=self.ns.jinja_prefix)
         t=env.get_template(self.ns.template)
