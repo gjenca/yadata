@@ -6,10 +6,6 @@ from yadata.command.command import YadataCommand
 from yadata import Datadir,Record
 from yadata.utils.misc import describe_record, Argument, MexGroup
 from yadata.command.command import YadataCommand
-import difflib
-
-def isjunk(s):
-    return s.isspace()
 
 def _passthis(it):
     
