@@ -11,6 +11,16 @@ from functools import lru_cache
 from collections import defaultdict
 
 
+# jinja2 filter to sort a list of records
+
+def sortfilter(value,*args):
+
+#    print('filter called args=',args,file=sys.stderr)
+    ret=list(value)
+    ret.sort(key=make_key(args))
+    return ret
+
+
 class Render(YadataCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
 """
@@ -120,6 +130,7 @@ class Render(YadataCommand):
                 key_dict[key][fieldname].sort(key=make_key(sort_by))
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix=self.ns.jinja_prefix)
+        env.filters['sort_records']=sortfilter
         t=env.get_template(self.ns.template)
         sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
 
