@@ -142,6 +142,13 @@ class Record(dict,metaclass=MetaRecord):
             return self['_key']<other['_key']
         return hash(self)<hash(other)
 
+    def __getitem__(self,key):
+        
+        if '.' not in key:
+            return dict.__getitem__(self,key)
+        else:
+            first,rest=key.split('.',maxsplit=1)
+            return (dict.__getitem__(self,first))[rest]
         
     def to_yaml(self):
 

@@ -29,37 +29,23 @@ def cmp(val1,val2):
     return 0
 
 @cache
-def deep_getitem(fieldref):
-
-    def ret_f(rec):
-    
-        to_ret=rec
-        for fieldname in fieldref.split('.'):
-            to_ret=to_ret[fieldname]
-        return to_ret
-
-    return ret_f
-
-@cache
 def keys_to_cmp(sort_keys):
 
     locale.setlocale(locale.LC_COLLATE,"")
-    sgn_field_refs=[]
+    sgn_fieldnames=[]
     for k in sort_keys:
         if k[0]=="~":
-            sgn_field_refs.append((-1,k[1:]))
+            sgn_fieldnames.append((-1,k[1:]))
         else:
-            sgn_field_refs.append((1,k))
+            sgn_fieldnames.append((1,k))
 
     def cmp_keys(d1,d2):
 
-        for sgn,field_ref in sgn_field_refs:
-            value1=(deep_getitem(field_ref))(d1)
-            value2=(deep_getitem(field_ref))(d2)
-            if type(value1) is str and type(value2) is str:
-                c=locale.strcoll(value1,value2)*sgn
+        for sgn,fieldname in sgn_fieldnames:
+            if type(d1[fieldname]) is str and type(d2[fieldname]) is str:
+                c=locale.strcoll(d1[fieldname],d2[fieldname])*sgn
             else:
-                c=cmp(value1,value2)*sgn
+                c=cmp(d1[fieldname],d2[fieldname])*sgn
             if c:
                 return c
         return 0
