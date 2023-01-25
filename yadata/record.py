@@ -102,9 +102,6 @@ class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
 """
 
-#    _many_to_many=[]
-#    _one_to_many=[]
-
     top_fields=[]
 
 
