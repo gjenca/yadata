@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from yadata.command.command import YadataCommand
 import sys
 from yadata.utils.compare import keys_to_cmp,cmp_to_key

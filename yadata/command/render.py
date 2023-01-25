@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import sys
 import re
 import yadata.utils.sane_yaml as sane_yaml
@@ -11,11 +9,9 @@ from functools import lru_cache
 from collections import defaultdict
 
 
-# jinja2 filter to sort a list of records
 
 def sortfilter(value,*args):
 
-#    print('filter called args=',args,file=sys.stderr)
     ret=list(value)
     ret.sort(key=make_key(args))
     return ret

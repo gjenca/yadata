@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from yadata.command.command import YadataCommand
 import os,sys
 

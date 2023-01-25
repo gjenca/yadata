@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import locale
 from functools import total_ordering,cache
 

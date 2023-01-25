@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 from yadata.command.command import YadataCommand
 import sys
 from yadata.utils.misc import describe_record,Argument

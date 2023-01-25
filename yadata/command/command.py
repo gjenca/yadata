@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from yadata.utils.misc import Argument,MexGroup
 
 def _add_arguments(something_with_arguments,subparser):

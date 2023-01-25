@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os,sys,errno,re
 import yaml
 import unicodedata
