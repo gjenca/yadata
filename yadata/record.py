@@ -112,8 +112,7 @@ class Record(dict,metaclass=MetaRecord):
 
     def __init__(self,*args,**kwargs):
         
-        d=dict(*args,**kwargs)
-        dict.__init__(self,d)
+        super(Record,self).__init__(*args,**kwargs)
         self.path=None
         self.dirty=False
 
@@ -126,12 +125,12 @@ class Record(dict,metaclass=MetaRecord):
 
     def __setitem__(self,key,value):
         self.dirty=True
-        dict.__setitem__(self,key,value)
+        super(Record,self).__setitem__(key,value)
 
     def __repr__(self):
         
         typename=type(self).__name__
-        dictrepr=dict.__repr__(self)
+        dictrepr=super(Record,self).__repr__()
 
         return f'{typename}({dictrepr})'
 
@@ -144,10 +143,10 @@ class Record(dict,metaclass=MetaRecord):
     def __getitem__(self,key):
         
         if '.' not in key:
-            return dict.__getitem__(self,key)
+            return super(Record,self).__getitem__(key)
         else:
             first,rest=key.split('.',maxsplit=1)
-            return (dict.__getitem__(self,first))[rest]
+            return (super(Record,self).__getitem__(first))[rest]
         
     def to_yaml(self):
 
