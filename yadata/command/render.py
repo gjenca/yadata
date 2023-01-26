@@ -124,7 +124,7 @@ class Render(YadataCommand):
                 key_dict[key][fieldname].sort(key=make_key(sort_by))
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix=self.ns.jinja_prefix)
-        env.filters['sort_records']=sortfilter
+        env.filters['sort_by']=sortfilter
         t=env.get_template(self.ns.template)
         sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
 
