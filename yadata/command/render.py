@@ -52,18 +52,14 @@ class Render(YadataCommand):
                 if typename==type(rec).__name__:
                     ret.append(rec)
             return ret
-        try:
-            import py_linq
-            records=py_linq.Enumerable(it)
-        except ImportError:
-            records=list(it)
-        for rec in records:
-                rec["_type"]=type(rec).__name__
+      
+        # use itertools.tee, maybe?
+        records=list(it)
         key_dict={}
         # Create key dictionary
         for rec in records:
             if "_key" in rec:
-                key_dict[rec["_key"]]=rec
+                key_dict[rec.yadata_tag,rec["_key"]]=rec
         edge_tags=defaultdict(lambda:[])
         for rec in records:
             for otm in rec._one_to_many:
@@ -74,12 +70,13 @@ class Render(YadataCommand):
                 else:
                     other_key=rec[otm.fieldname]
                     tags=''
-                if other_key in key_dict:
-                    other=key_dict[other_key]
+                other_yadata_tag=otm.inverse_type.yadata_tag
+                if (other_yadata_tag,other_key) in key_dict:
+                    other=key_dict[other_yadata_tag,other_key]
                 elif self.ns.soft_references:
                     continue
                 else:
-                    raise KeyError(f'render: {other_key} missing, referenced in record {rec["_key"]} (try --soft-references?)')
+                    raise KeyError(f'render: {other_key} missing, of type {other_yadata_tag} referenced in record {rec["_key"]} (try --soft-references?)')
                 if tags:
                     for edge_tag in tags.split(','):
                         edge_tags[(otm.fieldname,rec['_key'],other_key)].append(edge_tag)
@@ -99,12 +96,13 @@ class Render(YadataCommand):
                     else:
                         other_key=other_key_tagged
                         tags=''
-                    if other_key in key_dict:
-                        other=key_dict[other_key]
+                    other_yadata_tag=mtm.inverse_type.yadata_tag
+                    if (other_yadata_tag,other_key) in key_dict:
+                        other=key_dict[other_yadata_tag,other_key]
                     elif self.ns.soft_references:
                         continue
                     else:
-                        raise KeyError(f'render: {other_key} missing, referenced in record {rec["_key"]} (try --soft-references?)')
+                        raise KeyError(f'render: {other_key} of type {other_yadata_tag} missing, referenced in record {rec["_key"]} (try --soft-references?)')
                     if tags:
                         for edge_tag in tags.split(','):
                             edge_tags[(mtm.fieldname,rec['_key'],other_key)].append(edge_tag)
@@ -119,9 +117,9 @@ class Render(YadataCommand):
         for rec in records:
             for otm in rec._one_to_many:
                 if otm.inverse_sort_by:
-                    sort_these.add((rec[otm.fieldname]['_key'],otm.inverse_fieldname,otm.inverse_sort_by))
-        for key,fieldname,sort_by in sort_these:
-                key_dict[key][fieldname].sort(key=make_key(sort_by))
+                    sort_these.add((otm.inverse_type.yadata_tag,rec[otm.fieldname]['_key'],otm.inverse_fieldname,otm.inverse_sort_by))
+        for yadata_tag,key,fieldname,sort_by in sort_these:
+                key_dict[yadata_tag,key][fieldname].sort(key=make_key(sort_by))
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix=self.ns.jinja_prefix)
         env.filters['sort_by']=sortfilter
