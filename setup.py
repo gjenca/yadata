@@ -4,7 +4,7 @@
 from setuptools import setup,find_packages
 
 setup (name="yadata",
-       version="alpha",
+       version="0.9",
        description="Managing your data the UNIX way",
        author="Gejza Jenča",
        author_email="gejza.jenca@stuba.sk",

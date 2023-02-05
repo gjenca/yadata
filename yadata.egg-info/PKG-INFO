@@ -1,13 +1,8 @@
 Metadata-Version: 2.1
 Name: yadata
-Version: alpha
+Version: 0.9
 Summary: Managing your data the UNIX way
 Home-page: http://github.com/gjenca/yadata
 Author: Gejza Jenča
 Author-email: gejza.jenca@stuba.sk
-License: UNKNOWN
-Platform: UNKNOWN
 License-File: LICENSE
-
-UNKNOWN
-
