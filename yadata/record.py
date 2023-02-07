@@ -96,7 +96,6 @@ class MetaRecord(type):
 
         return instance_class
 
-@functools.total_ordering
 class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
 """
@@ -133,12 +132,6 @@ class Record(dict,metaclass=MetaRecord):
         dictrepr=super(Record,self).__repr__()
 
         return f'{typename}({dictrepr})'
-
-    def __lt__(self,other):
-        
-        if '_key' in self and '_key' in other:
-            return self['_key']<other['_key']
-        return hash(self)<hash(other)
 
     def __getitem__(self,key):
         
