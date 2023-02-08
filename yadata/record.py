@@ -129,9 +129,11 @@ class Record(dict,metaclass=MetaRecord):
     def __repr__(self):
         
         typename=type(self).__name__
-        dictrepr=super(Record,self).__repr__()
+        d=dict(self)
+        for key in self._inverse:
+            del d[key]
 
-        return f'{typename}({dictrepr})'
+        return f'{typename}({d})'
 
     def __getitem__(self,key):
         
