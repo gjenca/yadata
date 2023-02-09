@@ -17,7 +17,9 @@ def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_
 
     def decorate(cls):
     
-        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by,inverse_sort_by,forward))
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None,forward=True))
+        if sort_by or inverse_sort_by:
+            print(f'WARNING: @AddManyToMany {cls.__name__}: sort_by and inverse_sort_by are deprecated',file=sys.stderr)    
         inverse_type._inverse.append(inverse_fieldname)
         return cls
     return decorate
@@ -27,6 +29,8 @@ def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None,f
     def decorate(cls):
         
         cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by,forward))
+        if inverse_sort_by:
+            print(f'WARNING: @OneToMany {cls.__name__}: inverse_sort_by is deprecated',file=sys.stderr)    
         inverse_type._inverse.append(inverse_fieldname)
         return cls
    
