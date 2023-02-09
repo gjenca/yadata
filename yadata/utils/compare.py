@@ -1,22 +1,10 @@
 import locale
-from functools import total_ordering,cache
+from functools import total_ordering,cache,cmp_to_key
 
 @cache
 def make_key(key_tuple):
 
   return cmp_to_key(keys_to_cmp(key_tuple))
-
-def cmp_to_key(mycmp):
-    'Convert a cmp= function into a key= function'
-    @total_ordering
-    class K:
-        def __init__(self, obj, *args):
-            self.obj = obj
-        def __lt__(self, other):
-            return mycmp(self.obj, other.obj) < 0
-        def __eq__(self, other):
-            return mycmp(self.obj, other.obj) == 0
-    return K
 
 def cmp(val1,val2):
 
