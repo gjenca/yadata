@@ -75,6 +75,10 @@ class Render(YadataCommand):
                 if typename==type(rec).__name__:
                     ret.append(rec)
             return ret
+
+        def record_by_tag_and_key(yadata_tag,key):
+            
+            return key_dict[yadata_tag,key]
       
         # use itertools.tee, maybe?
         records=list(it)
@@ -170,7 +174,14 @@ class Render(YadataCommand):
         t=env.get_template(self.ns.template)
         # I probably do not need records=records here
         # Rename records_by_type (?)
-        sys.stdout.write(t.render(records=records,records_by_type=records_by_type,extra=self.extra,edge_tags=edge_tags))
+        sys.stdout.write(
+            t.render(
+                records=records,
+                records_by_type=records_by_type,
+                record_by_tag_and_key=record_by_tag_and_key,
+                extra=self.extra,
+                edge_tags=edge_tags,
+            ))
 
 
 
