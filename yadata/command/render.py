@@ -121,16 +121,25 @@ class Render(YadataCommand):
                 other[otm.inverse_fieldname].append(rec)
                 if otm.forward:
                     rec[otm.fieldname]=other
-        # Delete (cascade) records with dangling OTM fields
+        # Add to zap_this all records that refer to records with dangling OTM fields
         for zap_this in list(zap_these):
             backrefs_deep=collect_backrefs(zap_this,backrefs)
             zap_these.update(backrefs_deep)
+        # Remove zap_this from the list
         records=[
             record
             for record in records
             if (record.yadata_tag,record['_key']) not in zap_these
         ]
-        key_dict={key:val for key,val in key_dict.items() if key not in zap_these}
+        # Remove zap_this from the key_dict (maybe this is not needed)
+        for yadata_tag,key in zap_these:
+            del key_dict[yadata_tag,key]
+        # Remove zap_this records from inverse fields
+        for rec in records:
+            for inverse_field in rec._inverse:
+                rec[inverse_field]=[inv for inv in rec[inverse_field]
+                    if (inv.yadata_tag,inv['_key']) not in zap_these]
+        # Everything should be consistent now, no dangling OTM fields
         # Resolve MTM fields
         for rec in records:
             for mtm in rec._many_to_many:
@@ -160,7 +169,8 @@ class Render(YadataCommand):
                     all_others.append(other)
                 if mtm.forward:
                     rec[mtm.fieldname]=all_others
-        # Sorting is deprecated; this will be removed in the final version
+        # Sorting here is deprecated; sorting belongs to
+        # templates. This will be removed in the released version.
         sort_these=set()
         for rec in records:
             for otm in rec._one_to_many:
