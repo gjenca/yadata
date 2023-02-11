@@ -86,18 +86,6 @@ class MetaRecord(type):
             yaml.add_representer(instance_class,cls_representer)
             yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
 
-        if 'yadata_sort_by' in dir(instance_class):
-
-            sort_by=instance_class.yadata_sort_by
-            if type(sort_by) is str:
-                sort_by=(sort_by,)
-
-            def instance_class_lt(self,other):
-                return (keys_to_cmp(sort_by)(self,other))<0
-
-            instance_class.__lt__=instance_class_lt
-            instance_class=functools.total_ordering(instance_class)
-
         return instance_class
 
 class Record(dict,metaclass=MetaRecord):
