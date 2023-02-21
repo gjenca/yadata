@@ -3,6 +3,8 @@
 *.bbl
 *.blg
 *.log
+*.fls
+*.xdv
 *~
 *.out
 *.eps
@@ -16,3 +18,4 @@
 *.spl
 *.png
 *.synctex.gz
+*.fdb_latexmk
