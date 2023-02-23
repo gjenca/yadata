@@ -10,25 +10,25 @@ import functools
 import sys
 sys.path.insert(0,'')
 
-ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by','forward'])
-OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by','forward'])
+ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
+OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
 
-def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None,forward=True):
+def AddManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None):
 
     def decorate(cls):
     
-        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None,forward=True))
+        cls._many_to_many.append(ManyToMany(fieldname,inverse_type,inverse_fieldname,sort_by=None,inverse_sort_by=None))
         if sort_by or inverse_sort_by:
             print(f'WARNING: @AddManyToMany {cls.__name__}: sort_by and inverse_sort_by are deprecated',file=sys.stderr)    
         inverse_type._inverse.append(inverse_fieldname)
         return cls
     return decorate
 
-def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None,forward=True):
+def AddOneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by=None):
 
     def decorate(cls):
         
-        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by,forward))
+        cls._one_to_many.append(OneToMany(fieldname,inverse_type,inverse_fieldname,inverse_sort_by))
         if inverse_sort_by:
             print(f'WARNING: @OneToMany {cls.__name__}: inverse_sort_by is deprecated',file=sys.stderr)    
         inverse_type._inverse.append(inverse_fieldname)

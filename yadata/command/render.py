@@ -119,8 +119,7 @@ class Render(YadataCommand):
                 if otm.inverse_fieldname not in other:
                     other[otm.inverse_fieldname]=[]
                 other[otm.inverse_fieldname].append(rec)
-                if otm.forward:
-                    rec[otm.fieldname]=other
+                rec[otm.fieldname]=other
         # Add to zap_this all records that refer to records with dangling OTM fields
         for zap_this in list(zap_these):
             backrefs_deep=collect_backrefs(zap_this,backrefs)
@@ -167,8 +166,7 @@ class Render(YadataCommand):
                         other[mtm.inverse_fieldname]=[]
                     other[mtm.inverse_fieldname].append(rec)
                     all_others.append(other)
-                if mtm.forward:
-                    rec[mtm.fieldname]=all_others
+                rec[mtm.fieldname]=all_others
         # Sorting here is deprecated; sorting belongs to
         # templates. This will be removed in the released version.
         sort_these=set()
