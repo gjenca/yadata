@@ -28,7 +28,7 @@ def dump(rec):
     d_help={}
     flow_style=None
     if issubclass(type(rec),dict):
-        if issubclass(type(rec),yadata.record.Record) :
+        if issubclass(type(rec),yadata.record.Record):
                 top_fields=['_key']+rec.top_fields
         else:
             top_fields=['_key']
