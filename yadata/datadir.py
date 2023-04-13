@@ -28,7 +28,8 @@ class Datadir(list):
                 for name in files:
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
-                        data=yaml.load(open(path),Loader=yaml.Loader)
+                        with open(path) as f:
+                            data=yaml.load(f,Loader=yaml.Loader)
                         if not issubclass(type(data),Record):
                             raise TypeError("File %s does not contain a Record subtype" % path)
                         data.path=path
