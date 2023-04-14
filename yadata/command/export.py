@@ -50,7 +50,6 @@ class Export(YadataCommand):
             for i,key in enumerate(keys):
                 inverse_keys[key]=i
                 worksheet.write(0,i,key)
-            print(inverse_keys)
             for row,rec in enumerate(records_with_tag,start=1):
                 for key,value in rec.items():
                     if key not in inverse_keys:

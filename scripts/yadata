@@ -23,6 +23,7 @@ c_map={
     'run':yadata.command.Run,
     'yield':yadata.command.Yield,
     'export':yadata.command.Export,
+    'import':yadata.command.Import,
 }
 
 parse=argparse.ArgumentParser()
