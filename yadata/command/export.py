@@ -3,7 +3,6 @@ import yadata.utils.sane_yaml as sane_yaml
 from yadata.command.command import YadataCommand
 from yadata.utils.misc import Argument
 
-from openpyxl import Workbook
 from collections import defaultdict
 
 
@@ -33,6 +32,8 @@ class Export(YadataCommand):
 
     def execute(self,it):
 
+        # An expensive import belongs here
+        from openpyxl import Workbook
         records=list(it)
         workbook=Workbook()
         del workbook[workbook.active.title]

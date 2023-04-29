@@ -1,7 +1,6 @@
 import sys
 import inspect
 
-import openpyxl
 
 import yadata.utils.sane_yaml as sane_yaml
 from yadata.command.command import YadataCommand
@@ -27,7 +26,9 @@ class Import(YadataCommand):
         self.ns=ns
 
     def execute(self,it=None):
-        
+       
+        # This is an expensive import, so we move it here
+        import openpyxl
         wb=openpyxl.load_workbook(self.ns.infile)
         tag_to_type={}
         for name,obj in inspect.getmembers(_yadata_types):
