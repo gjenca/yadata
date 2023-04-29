@@ -5,7 +5,6 @@ import inspect
 import yadata.utils.sane_yaml as sane_yaml
 from yadata.command.command import YadataCommand
 from yadata.utils.misc import Argument
-import _yadata_types
 from yadata.record import Record
 
 
@@ -31,6 +30,7 @@ class Import(YadataCommand):
         import openpyxl
         wb=openpyxl.load_workbook(self.ns.infile)
         tag_to_type={}
+        import _yadata_types
         for name,obj in inspect.getmembers(_yadata_types):
             if inspect.isclass(obj) and issubclass(obj,Record):
                 tag_to_type[obj.yadata_tag]=obj
