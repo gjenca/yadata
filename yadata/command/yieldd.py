@@ -12,6 +12,7 @@ the current record is called 'self'. Writes the resulting objects to an object s
     arguments=(
         Argument("term",help="python term"),
         Argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception"),
+        Argument("-g","--generator",action="store_true",help="this is not an object, but a generator"),
         Argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
     )
 
@@ -41,7 +42,11 @@ the current record is called 'self'. Writes the resulting objects to an object s
                     print("yield: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
                 else:
                     raise
-            yield objout
+            if self.ns.generator:
+                for obj in objout:
+                    yield obj
+            else:
+                yield objout
         if exceptions and not self.ns.failed:
             print("yield: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
             
