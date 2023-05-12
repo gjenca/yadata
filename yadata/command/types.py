@@ -4,7 +4,7 @@ from yadata.utils.misc import Argument
 import _yadata_types
 
 class Type(YadataCommand):
-    '''reads YAML stream of typed objects, outputs YAML stream with objects of one of the given type(s)'''
+    '''reads YAML stream of typed objects, outputs YAML stream with objects of one of the given type(s) or their subclasses'''
     
     name='type'
 
