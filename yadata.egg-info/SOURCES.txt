@@ -14,7 +14,9 @@ yadata/command/append.py
 yadata/command/cast.py
 yadata/command/command.py
 yadata/command/execc.py
+yadata/command/export.py
 yadata/command/filter.py
+yadata/command/importt.py
 yadata/command/merge.py
 yadata/command/read.py
 yadata/command/render.py
