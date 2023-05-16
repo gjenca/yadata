@@ -7,9 +7,9 @@ except ImportError:
     pass
 
 class Cast(YadataCommand):
-    """reads YAML stream, creates objects of a given type from each object, outputs"""
+    """reads YAML stream, creates objects of a given type from each object, outputs YAML stream"""
 
-    name="append"
+    name="cast"
 
     arguments=(
         Argument("type",help="Create objects of this type."),
