@@ -3,7 +3,7 @@ import yaml
 import unicodedata
 import tempfile
 import shutil
-from .record import Record
+from .record import Record,LogEntry
 import warnings
 try:
     import _yadata_types 
@@ -51,7 +51,7 @@ class Datadir(list):
             object_to_merge.dirty=True
             object_to_merge.save(self)
             self.append(object_to_merge)
-            return {},[]
+            return {},[LogEntry(object_to_merge['_key'],'new-record',None,None,None)]
         else:
             if len(matching_records)>1:
                 raise ValueError("%d matching records for %s" % (len(matching_records),object_to_merge))

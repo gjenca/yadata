@@ -57,7 +57,9 @@ class LogEntry:
 
     def __repr__(self):
 
-        ret=f'_key={self._key}[{self.fieldname}]'
+        ret=f'_key={self._key}'
+        if self.fieldname:
+            ret+=f'[{self.fieldname}]'
         if self.oldvalue or self.newvalue:
             ret+=f' {self.oldvalue}->{self.newvalue}'
         ret+=f' (method:{self.method})'
