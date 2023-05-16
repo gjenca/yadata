@@ -57,7 +57,11 @@ class LogEntry:
 
     def __repr__(self):
 
-        return f"_key={self._key}[{self.fieldname}] {self.oldvalue}->{self.newvalue} (method:{self.method})"
+        ret=f'_key={self._key}[{self.fieldname}]'
+        if self.oldvalue or self.newvalue:
+            ret+=f' {self.oldvalue}->{self.newvalue}'
+        ret+=f' (method:{self.method})'
+        return ret
 
 class MetaRecord(type):
     
