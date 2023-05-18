@@ -1,7 +1,6 @@
 from yadata.command.command import YadataCommand
 import sys
 from yadata.utils.misc import Argument
-import _yadata_types
 
 class Type(YadataCommand):
     '''reads YAML stream of typed objects, outputs YAML stream with objects of one of the given type(s) or their subclasses'''
@@ -21,6 +20,7 @@ class Type(YadataCommand):
     data_out=True
 
     def execute(self,it):
+        import _yadata_types
         types=[getattr(_yadata_types,typename) for typename in self.ns.types]
         for i,rec in enumerate(it):
             if (self.ns.keep_untyped and type(rec) is dict) or \
