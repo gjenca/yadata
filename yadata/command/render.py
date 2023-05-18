@@ -177,7 +177,8 @@ class Render(YadataCommand):
         for yadata_tag,key,fieldname,sort_by in sort_these:
                 key_dict[yadata_tag,key][fieldname].sort(key=make_key(sort_by))
         env=Environment(loader=FileSystemLoader(self.ns.template_dir),
-            line_statement_prefix=self.ns.jinja_prefix)
+            line_statement_prefix=self.ns.jinja_prefix,
+            extensions=['jinja2.ext.loopcontrols'])
         env.filters['sort_by']=sortfilter
         t=env.get_template(self.ns.template)
         # I probably do not need records=records here
