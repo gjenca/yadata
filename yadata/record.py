@@ -107,6 +107,17 @@ class Record(dict,metaclass=MetaRecord):
 
         return '!'+cls.__name__
 
+    def key(self):
+
+        if 'get_key_prefix' in dir(self):
+            return self.get_key_prefix()
+
+        if 'key_format' in dir(self):
+            return self.key_format.format(**self)
+
+        classname=type(self).__name__
+        raise TypeError(f'No key method and no key_format class property in class {classname}')
+
     def __init__(self,*args,**kwargs):
         
         super(Record,self).__init__(*args,**kwargs)
@@ -150,7 +161,7 @@ class Record(dict,metaclass=MetaRecord):
 
     def generate_keys(self):
 
-        prefix=self.get_key_prefix()
+        prefix=self.key()
         yield prefix
         i=0
         while True:
@@ -222,6 +233,7 @@ class Record(dict,metaclass=MetaRecord):
                     log.append(LogEntry(self["_key"],methods[field],field,old_value,self[field]))
         if bounced:
             bounced["_key"]=self["_key"]
+            bounced=(type(self))(bounced)
             return bounced,log
         else:
             return {},log
