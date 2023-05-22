@@ -8,7 +8,7 @@ from collections import defaultdict
 
 def is_atomic(x):
 
-    return type(x) in (str,int,float)
+    return type(x) in (str,int,float,bool)
 
 def addr(row,col):
 
