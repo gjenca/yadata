@@ -66,8 +66,12 @@ class Render(YadataCommand):
         else:
             self.extra=None
 
-
     def execute(self,it):
+
+        INPUTS_map={
+                'str':r'<input type="text" name="{name}" id="{name}" value="{value}">',
+                'int':r'<input type="text" name="{name}" id="{name}" value="{value}">',
+        }
 
         def records_by_type(typename):
             ret=[]
@@ -79,7 +83,15 @@ class Render(YadataCommand):
         def record_by_tag_and_key(yadata_tag,key):
             
             return key_dict[yadata_tag,key]
-      
+
+        def field_input(rec,field,typename=None):
+            
+            value=rec[field]
+            if typename is None:
+                typename=type(value).__name__
+            name=';'.join((rec.yadata_tag[1:],rec['_key'],field))
+            return INPUTS_map[typename].format(name=name,value=value)
+        
         # use itertools.tee, maybe?
         records=list(it)
         key_dict={}
@@ -188,6 +200,7 @@ class Render(YadataCommand):
                 records=records,
                 records_by_type=records_by_type,
                 record_by_tag_and_key=record_by_tag_and_key,
+                field_input=field_input,
                 extra=self.extra,
                 edge_tags=edge_tags,
             ))
