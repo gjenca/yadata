@@ -1,4 +1,5 @@
 LICENSE
+pyproject.toml
 setup.py
 scripts/yadata
 yadata/__init__.py
