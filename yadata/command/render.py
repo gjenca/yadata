@@ -7,8 +7,11 @@ from yadata.utils.compare import make_key
 from yadata.utils.misc import Argument
 from functools import lru_cache
 from collections import defaultdict
+from yadata.record import Record
 
-
+def strip_document_end_marker(s):
+   if s.endswith('\n...\n'):
+       return s[:-5]
 
 def sortfilter(value,*args):
 
@@ -68,11 +71,6 @@ class Render(YadataCommand):
 
     def execute(self,it):
 
-        INPUTS_map={
-                'str':r'<input type="text" name="{name}" id="{name}" value="{value}">',
-                'int':r'<input type="text" name="{name}" id="{name}" value="{value}">',
-        }
-
         def records_by_type(typename):
             ret=[]
             for rec in records:
@@ -87,10 +85,25 @@ class Render(YadataCommand):
         def field_input(rec,field,typename=None):
             
             value=rec[field]
-            if typename is None:
-                typename=type(value).__name__
             name=';'.join((rec.yadata_tag[1:],rec['_key'],field))
-            return INPUTS_map[typename].format(name=name,value=value)
+            yaml_value=sane_yaml.dump(value)
+            yaml_value=strip_document_end_marker(yaml_value)
+            fstring_l=[]
+            if type(value) in (int,str,float):
+                fstring_l.append(
+                        r'<input type="text" name="{name}" id="{name}" value="{value}">'
+                        )
+            elif type(value) is bool:
+                fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
+                if value:
+                    fstring_l.append(r'<option value="true" selected="selected">yes</option>')
+                    fstring_l.append(r'<option value="false">no</option>')
+                else:
+                    fstring_l.append(r'<option value="true">yes</option>')
+                    fstring_l.append(r'<option value="false" selected="selected">no</option>')
+                fstring_l.append(r'</select>')
+            fstring="\n".join(fstring_l)
+            return fstring.format(name=name,value=yaml_value)
         
         # use itertools.tee, maybe?
         records=list(it)
