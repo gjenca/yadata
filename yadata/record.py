@@ -123,6 +123,9 @@ class Record(dict,metaclass=MetaRecord):
         super(Record,self).__init__(*args,**kwargs)
         self.path=None
         self.dirty=False
+        for key in self.defaults:
+            if key not in self:
+                self[key]=self.defaults[key]()
 
     def __new__(cls,*args,**kwargs):
 
@@ -230,7 +233,8 @@ class Record(dict,metaclass=MetaRecord):
                     log.append(LogEntry(self["_key"],methods[field],field,old_value,self[field]))
         if bounced:
             bounced["_key"]=self["_key"]
-            bounced=(type(self))(bounced)
-            return bounced,log
+            t_bounced=(type(self))()
+            t_bounced.update(bounced)
+            return t_bounced,log
         else:
             return {},log
