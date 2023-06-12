@@ -5,7 +5,7 @@ from jinja2 import Template,FileSystemLoader,Environment
 from yadata.command.command import YadataCommand
 from yadata.utils.compare import make_key
 from yadata.utils.misc import Argument
-from functools import lru_cache
+from functools import cache
 from collections import defaultdict
 from yadata.record import Record
 
@@ -120,6 +120,12 @@ class Render(YadataCommand):
             # All otm fields must be valid
             valid=True
             for otm in rec._one_to_many:
+                # A missing OTM field is *not* dangling
+                if otm.fieldname not in rec:
+                    continue
+                # An OTM field explicitely set to None is *not* dangling
+                if rec[otm.fieldname] is None:
+                    continue
                 other_key,tags=split_tags(rec[otm.fieldname])
                 other_yadata_tag=otm.inverse_type.yadata_tag
                 if (other_yadata_tag,other_key) not in key_dict:
@@ -131,8 +137,12 @@ class Render(YadataCommand):
                         raise KeyError(f'render: {other_key} missing, of type {other_yadata_tag} referenced in record {rec["_key"]} (try --soft-references?)')
             if not valid:
                 continue
-            # We know that all OTM fields are valid now; we may resolve them
+            # We know that all OTM fields are valid or missing or None now; we may resolve them
             for otm in rec._one_to_many:
+                # OTM field is missing or None
+                if otm.fieldname not in rec or \
+                    rec[otm.fieldname] is None:
+                    continue
                 other_key,tags=split_tags(rec[otm.fieldname])
                 other_yadata_tag=otm.inverse_type.yadata_tag
                 other=key_dict[other_yadata_tag,other_key]
@@ -165,6 +175,8 @@ class Render(YadataCommand):
                     if (inv.yadata_tag,inv['_key']) not in zap_these]
         # Everything should be consistent now, no dangling OTM fields
         # Resolve MTM fields
+        # It seems to me that MTM fields sould not be allowed to be missing or None;
+        # they may be [] but this is not a problem
         for rec in records:
             for mtm in rec._many_to_many:
                 all_others=[]
