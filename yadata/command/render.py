@@ -71,10 +71,12 @@ class Render(YadataCommand):
 
     def execute(self,it):
 
+        @cache
         def records_by_type(typename):
             ret=[]
             for rec in records:
-                if typename==type(rec).__name__:
+                supernames=[cls.__name__ for cls in type(rec).__mro__]
+                if typename in supernames:
                     ret.append(rec)
             return ret
 
@@ -100,7 +102,7 @@ class Render(YadataCommand):
 
         def field_input(rec,field,typename=None):
             
-            value=rec[field]
+            value=rec.get(field,None)
             name=';'.join((rec.yadata_tag[1:],rec['_key'],field))
             yaml_value=sane_yaml.dump(value)
             yaml_value=strip_document_end_marker(yaml_value)
@@ -114,6 +116,18 @@ class Render(YadataCommand):
                 for opt in (True,False):
                     fstring_l.append(render_option(opt,opt==value))
                 fstring_l.append(r'</select>')
+            else:
+                for otm in rec._one_to_many:
+                    if field==otm.fieldname:
+                        fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
+                        value=rec.get(field,None)
+                        fstring_l.append(render_option(None,value is None))
+                        if value!=None:
+                            value=value['_key']
+                        typename=otm.inverse_type.__name__
+                        for opt_rec_key in sorted(opt_rec['_key'] for opt_rec in records_by_type(typename)):
+                            fstring_l.append(render_option(opt_rec_key,value==opt_rec_key))
+                        fstring_l.append(r'</select>')
             fstring="\n".join(fstring_l)
             return fstring.format(name=name,value=yaml_value)
         
