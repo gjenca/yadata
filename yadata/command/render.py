@@ -82,6 +82,22 @@ class Render(YadataCommand):
             
             return key_dict[yadata_tag,key]
 
+        def render_option(value,selected):
+
+            if type(value) is bool:
+                attr_value={True:'true',False:'false'}[value]
+                show_value={True:'yes',False:'no'}[value]
+            elif value is None:
+                attr_value='null'
+                show_value='--'
+            elif type(value) is str:
+                attr_value=r'&quot;'+value+r'&quot;'
+                show_value=value
+            if selected:
+                return f'<option value="{attr_value}" selected="selected">{show_value}</option>'
+            else:
+                return f'<option value="{attr_value}">{show_value}</option>'
+
         def field_input(rec,field,typename=None):
             
             value=rec[field]
@@ -95,12 +111,8 @@ class Render(YadataCommand):
                         )
             elif type(value) is bool:
                 fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
-                if value:
-                    fstring_l.append(r'<option value="true" selected="selected">yes</option>')
-                    fstring_l.append(r'<option value="false">no</option>')
-                else:
-                    fstring_l.append(r'<option value="true">yes</option>')
-                    fstring_l.append(r'<option value="false" selected="selected">no</option>')
+                for opt in (True,False):
+                    fstring_l.append(render_option(opt,opt==value))
                 fstring_l.append(r'</select>')
             fstring="\n".join(fstring_l)
             return fstring.format(name=name,value=yaml_value)
