@@ -135,7 +135,8 @@ class Record(dict,metaclass=MetaRecord):
         return instance
 
     def __setitem__(self,key,value):
-        self.dirty=True
+        if (key not in self) or self[key]!=value:
+            self.dirty=True
         super(Record,self).__setitem__(key,value)
 
     def __repr__(self):
