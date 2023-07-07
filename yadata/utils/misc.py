@@ -1,3 +1,11 @@
+import os
+import sys
+
+def _yadata_log(*args,**kwargs):
+
+    if 'YADATA_DEBUG' in os.environ and os.environ['YADATA_DEBUG']=='1':
+        print(*args,**kwargs,file=sys.stderr)
+
 def describe_record(i,rec):
     
     return "record no. %d (_key=%s)" % (i,rec.get("_key","None")) 

@@ -8,6 +8,7 @@ from yadata.utils.misc import Argument
 from functools import cache
 from collections import defaultdict
 from yadata.record import Record
+from yadata.utils.misc import _yadata_log
 
 def strip_document_end_marker(s):
    if s.endswith('\n...\n'):
@@ -157,6 +158,7 @@ class Render(YadataCommand):
                 if (other_yadata_tag,other_key) not in key_dict:
                     if self.ns.soft_references:
                         zap_these.add((rec.yadata_tag,rec['_key']))
+                        _yadata_log('zapping',rec['_key'],'because of',other_key)
                         valid=False
                         break
                     else:
