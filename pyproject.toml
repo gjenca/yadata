@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "YAML based object database"
 authors = ["Gejza Jenča <gejza.jenca@stuba.sk>"]
 license = "GPL2"
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
