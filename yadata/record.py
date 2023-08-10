@@ -3,6 +3,7 @@ import os
 import errno
 import tempfile
 import yadata.utils.sane_yaml as sane_yaml
+from yadata.utils.misc import _yadata_log
 from yadata.utils.compare import keys_to_cmp
 import yaml
 from collections import namedtuple
@@ -236,6 +237,9 @@ class Record(dict,metaclass=MetaRecord):
             bounced["_key"]=self["_key"]
             t_bounced=(type(self))()
             t_bounced.update(bounced)
+            for inverse_field in type(self)._inverse:
+                if inverse_field in t_bounced:
+                    del t_bounced[inverse_field]
             return t_bounced,log
         else:
             return {},log
