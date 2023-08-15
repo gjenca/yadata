@@ -232,6 +232,11 @@ class Record(dict,metaclass=MetaRecord):
                     old_value=self[field]
                     self.method_dispatcher[methods[field]](self,field,other[field])
                     log.append(LogEntry(self["_key"],methods[field],field,old_value,self[field]))
+            elif field in self and \
+                    field in methods and \
+                    methods[field]=="delete":
+                del self[field]
+                self.dirty=True
         if bounced:
             bounced["_key"]=self["_key"]
             t_bounced=(type(self))()
