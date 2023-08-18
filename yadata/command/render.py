@@ -118,7 +118,7 @@ class Render(YadataCommand):
                     fstring_l.append(render_option(opt,opt==value))
                 fstring_l.append(r'</select>')
             else:
-                for otm in rec._one_to_many:
+                for otm in type(rec)._one_to_many:
                     if field==otm.fieldname:
                         fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
                         value=rec.get(field,None)
@@ -131,7 +131,7 @@ class Render(YadataCommand):
                         fstring_l.append(r'</select>')
             fstring="\n".join(fstring_l)
             return fstring.format(name=name,value=yaml_value)
-        
+
         # use itertools.tee, maybe?
         records=list(it)
         key_dict={}
