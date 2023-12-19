@@ -6,3 +6,5 @@ Home-page: http://github.com/gjenca/yadata
 Author: Gejza Jenča
 Author-email: gejza.jenca@stuba.sk
 License-File: LICENSE
+Requires-Dist: pyyaml
+Requires-Dist: jinja2
