@@ -44,6 +44,15 @@ def split_tags(reftags):
 
         return other_key,tags
 
+def collect_otm(C):
+
+    ret=[]
+    for cls in C.__mro__:
+        if '_one_to_many' in dir(cls):
+            ret.extend(cls._one_to_many)
+    return ret
+        
+
 class Render(YadataCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
 """
@@ -118,7 +127,7 @@ class Render(YadataCommand):
                     fstring_l.append(render_option(opt,opt==value))
                 fstring_l.append(r'</select>')
             else:
-                for otm in rec._one_to_many:
+                for otm in collect_otm(type(rec)):
                     if field==otm.fieldname:
                         fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
                         value=rec.get(field,None)
@@ -131,7 +140,7 @@ class Render(YadataCommand):
                         fstring_l.append(r'</select>')
             fstring="\n".join(fstring_l)
             return fstring.format(name=name,value=yaml_value)
-        
+
         # use itertools.tee, maybe?
         records=list(it)
         key_dict={}
