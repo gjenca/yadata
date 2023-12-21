@@ -20,8 +20,6 @@ c_map={
     'cast':yadata.command.Cast,
     'run':yadata.command.Run,
     'yield':yadata.command.Yield,
-    'export':yadata.command.Export,
-    'import':yadata.command.Import,
 }
 
 def run():
