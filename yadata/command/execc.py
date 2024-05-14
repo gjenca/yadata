@@ -15,6 +15,7 @@ class Exec(YadataCommand):
             Argument("-f","--failed",action="store_true",help="output only the failed records,supress error messages")
         ),
         Argument("-r","--restrict",action="store",help="restrict execution to only those records for which the RESTRICT python term evaluates to True"),
+        Argument("-t","--type",help="apply statement only to records of this type"),
         Argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception"),
         Argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
     )
@@ -33,6 +34,9 @@ class Exec(YadataCommand):
     def execute(self,it):
         exceptions=0
         for i,rec in enumerate(it):
+            if self.ns.type and self.ns.type!=type(rec).__name__:
+                yield rec
+                continue
             tf=True
             if self.ns.restrict:
                 d=dict(rec)
