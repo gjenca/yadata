@@ -239,7 +239,7 @@ class Record(dict,metaclass=MetaRecord):
                 self.dirty=True
         if bounced:
             bounced["_key"]=self["_key"]
-            t_bounced=(type(self))()
+            t_bounced=(type(self))(_key=self["_key"])
             t_bounced.update(bounced)
             for inverse_field in type(self)._inverse:
                 if inverse_field in t_bounced:

@@ -9,6 +9,7 @@ license = "GPL2"
 python = "^3.11"
 PyYAML = "^6.0"
 Jinja2 = "^3.1.2"
+pybtex = "^0.24.0"
 
 [tool.poetry.scripts]
 yadata = 'yadata.main:run'
