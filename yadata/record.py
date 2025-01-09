@@ -102,11 +102,6 @@ class Record(dict,metaclass=MetaRecord):
     top_fields=[]
     defaults={}
 
-    @classmethod
-    @property
-    def yadata_tag(cls):
-
-        return '!'+cls.__name__
 
     def key(self):
 
@@ -219,7 +214,7 @@ class Record(dict,metaclass=MetaRecord):
        
         if "_key" not in self:
             raise ValueError("Attempted to merge with a record without key")
-        bounced={}
+        bounced_fields=[]
         log=[]
         for field in other:
             if field not in self:
@@ -227,7 +222,7 @@ class Record(dict,metaclass=MetaRecord):
                 log.append(LogEntry(self["_key"],"new-field",field,None,other[field]))
             elif self[field]!=other[field]:
                 if field not in methods:
-                    bounced[field]=other[field]
+                    bounced_fields.append(field)
                 else:
                     old_value=self[field]
                     self.method_dispatcher[methods[field]](self,field,other[field])
@@ -237,13 +232,15 @@ class Record(dict,metaclass=MetaRecord):
                     methods[field]=="delete":
                 del self[field]
                 self.dirty=True
-        if bounced:
-            bounced["_key"]=self["_key"]
-            t_bounced=(type(self))()
-            t_bounced.update(bounced)
+        if bounced_fields:
+            t_bounced=(type(self))(other)
+            t_bounced['_key']=self['_key']
             for inverse_field in type(self)._inverse:
                 if inverse_field in t_bounced:
                     del t_bounced[inverse_field]
+            for field in list(t_bounced):
+                if field not in bounced_fields and field!='_key':
+                    del t_bounced[field]
             return t_bounced,log
         else:
             return {},log

@@ -1,9 +1,14 @@
 import sys
 import argparse
+import os
+sys.path.append(os.getcwd())
 try:
     import _yadata_types
-except ModuleNotFoundError:
-    pass
+except ModuleNotFoundError as mnfe:
+    if mnfe.name=='_yadata_types':
+        pass
+    else:
+        raise
 
 import yadata.command
 import yadata.utils.sane_yaml as sane_yaml

@@ -1,5 +1,4 @@
 import yaml
-import functools
 import yadata.record
 
 def construct_yaml_str(self, node):

@@ -33,15 +33,15 @@ def collect_backrefs(key,backrefs):
     return ret
 
 def split_tags(reftags):
-
+        
         if type(reftags) is str:
-            m=re.match('(?P<key>[^;]*);?(?P<tags>.*)',reftags)
+            m=re.match(r'(?P<key>[^;]*);?(?P<tags>.*)',reftags)
             other_key=m.group('key')
             tags=m.group('tags')
         else:
             other_key=reftags
             tags=''
-
+        
         return other_key,tags
 
 def collect_otm(C):
@@ -186,6 +186,7 @@ class Render(YadataCommand):
                 backrefs[other_yadata_tag,other_key].add((rec.yadata_tag,rec['_key']))
                 if tags:
                     for edge_tag in tags.split(','):
+                        edge_tag=edge_tag.strip()
                         edge_tags[(otm.fieldname,rec['_key'],other_key)].append(edge_tag)
                         edge_tags[(otm.inverse_fieldname,other_key,rec['_key'])].append(edge_tag)
                 if otm.inverse_fieldname not in other:
@@ -234,6 +235,7 @@ class Render(YadataCommand):
                         raise KeyError(f'render: {other_key} of type {other_yadata_tag} missing, referenced in record {rec["_key"]} (try --soft-references?)')
                     if tags:
                         for edge_tag in tags.split(','):
+                            edge_tag=edge_tag.strip()
                             edge_tags[(mtm.fieldname,rec['_key'],other_key)].append(edge_tag)
                             edge_tags[(mtm.inverse_fieldname,other_key,rec['_key'])].append(edge_tag)
                     if mtm.inverse_fieldname not in other:
@@ -258,6 +260,7 @@ class Render(YadataCommand):
         t=env.get_template(self.ns.template)
         # I probably do not need records=records here
         # Rename records_by_type (?)
+        #print('edge_tags',edge_tags,file=sys.stderr)
         sys.stdout.write(
             t.render(
                 records=records,
