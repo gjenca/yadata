@@ -102,11 +102,6 @@ class Record(dict,metaclass=MetaRecord):
     top_fields=[]
     defaults={}
 
-    @classmethod
-    @property
-    def yadata_tag(cls):
-
-        return '!'+cls.__name__
 
     def key(self):
 
