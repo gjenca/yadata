@@ -100,8 +100,6 @@ class Record(dict,metaclass=MetaRecord):
 """
 
     top_fields=[]
-    defaults={}
-
 
     def key(self):
 
@@ -119,10 +117,7 @@ class Record(dict,metaclass=MetaRecord):
         super(Record,self).__init__(*args,**kwargs)
         self.path=None
         self.dirty=False
-        for key in self.defaults:
-            if key not in self:
-                self[key]=self.defaults[key]()
-
+    
     def __new__(cls,*args,**kwargs):
 
         instance=super(Record,cls).__new__(cls,*args,**kwargs)
