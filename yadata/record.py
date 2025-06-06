@@ -9,6 +9,8 @@ import yaml
 from collections import namedtuple
 import functools
 import sys
+import typing
+import typeguard
 sys.path.insert(0,'')
 
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
@@ -115,6 +117,13 @@ class Record(dict,metaclass=MetaRecord):
     def __init__(self,*args,**kwargs):
         
         super(Record,self).__init__(*args,**kwargs)
+        hints=typing.get_type_hints(type(self))
+        for key in hints:
+            if key in self:
+                try:
+                    typeguard.check_type(self[key],hints[key])
+                except typeguard.TypeCheckError:
+                    raise TypeError(f'Expected {hints[key]} for {key} in {type(self)}, got {self[key]}')
         self.path=None
         self.dirty=False
     
@@ -126,6 +135,14 @@ class Record(dict,metaclass=MetaRecord):
         return instance
 
     def __setitem__(self,key,value):
+        
+        hints=typing.get_type_hints(type(self))
+        if key in hints:
+            try:
+                typeguard.check_type(value,hints[key])
+            except typeguard.TypeCheckError:
+                print(f'Expected {hints[key]} for {key} in {type(self)}, got {value}',file=sys.stderr)
+                raise
         self.dirty=True
         super(Record,self).__setitem__(key,value)
 
