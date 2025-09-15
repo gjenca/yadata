@@ -79,6 +79,9 @@ class MetaRecord(type):
 
         if 'yadata_tag' in dir(instance_class):
 
+            if instance_class.yadata_tag=='auto':
+                instance_class.yadata_tag='!'+instance_class.__name__
+
             def cls_representer(dumper,data):
 
                 d=dict(data)
