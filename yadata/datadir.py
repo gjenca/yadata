@@ -54,7 +54,9 @@ class Datadir(list):
             return {},[LogEntry(object_to_merge['_key'],'new-record',None,None,None)]
         else:
             if len(matching_records)>1:
-                raise ValueError("%d matching records for %s" % (len(matching_records),object_to_merge))
+                matching_keys=[obj['_key'] for obj in matching_records]
+                raise ValueError(f"""{len(matching_records)} matching records for {object_to_merge}
+the keys are {matching_keys}""")
             else:
                 matching_record=matching_records[0]
                 bounce,log_record=matching_record.merge(object_to_merge,methods)
