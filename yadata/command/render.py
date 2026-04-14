@@ -1,5 +1,6 @@
 import sys
 import re
+import datetime
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 from yadata.command.command import YadataCommand
@@ -110,17 +111,32 @@ class Render(YadataCommand):
             else:
                 return f'<option value="{attr_value}">{show_value}</option>'
 
-        def field_input(rec,field,typename=None):
+        def field_input(rec,field,typename=None,textarea=None):
             
             value=rec.get(field,None)
             name=';'.join((rec.yadata_tag[1:],rec['_key'],field))
             yaml_value=sane_yaml.dump(value)
             yaml_value=strip_document_end_marker(yaml_value)
             fstring_l=[]
-            if type(value) in (int,str,float):
+            if type(value) in (int,float):
                 fstring_l.append(
                         r'<input type="text" name="{name}" id="{name}" value="{value}">'
                         )
+            elif type(value) is str:
+                if textarea:
+                    fstring_l.append(
+                            r'<textarea name="{name}" id="{name}" rows="6" cols="33">'
+                            )
+                    fstring_l.append(
+                            r'{value}'
+                            )
+                    fstring_l.append(
+                            r'</textarea>'
+                            )
+                else:
+                    fstring_l.append(
+                            r'<input type="text" name="{name}" id="{name}" value="{value}">'
+                            )
             elif type(value) is bool:
                 fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
                 for opt in (True,False):
@@ -267,6 +283,7 @@ class Render(YadataCommand):
                 records_by_type=records_by_type,
                 record_by_tag_and_key=record_by_tag_and_key,
                 field_input=field_input,
+                time_now=datetime.datetime.now(),
                 extra=self.extra,
                 edge_tags=edge_tags,
             ))
