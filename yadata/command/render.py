@@ -1,5 +1,6 @@
 import sys
 import re
+import datetime
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 from yadata.command.command import YadataCommand
@@ -269,6 +270,7 @@ class Render(YadataCommand):
                 field_input=field_input,
                 extra=self.extra,
                 edge_tags=edge_tags,
+                time_now=datetime.datetime.now(),
             ))
 
 
