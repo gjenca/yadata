@@ -11,6 +11,9 @@ import functools
 import sys
 import typing
 import typeguard
+import re
+import glob
+
 sys.path.insert(0,'')
 
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
@@ -99,6 +102,11 @@ class MetaRecord(type):
             yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
 
         return instance_class
+
+@functools.cache
+def _matches(pat,s):
+
+    return re.match(glob.translate(pat),s)
 
 class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
@@ -236,12 +244,14 @@ class Record(dict,metaclass=MetaRecord):
                 self[field]=other[field]
                 log.append(LogEntry(self["_key"],"new-field",field,None,other[field]))
             elif self[field]!=other[field]:
-                if field not in methods:
-                    bounced_fields.append(field)
+                for field_pattern in methods:
+                    if _matches(field_pattern,field):
+                        old_value=self[field]
+                        self.method_dispatcher[methods[field_pattern]](self,field,other[field])
+                        log.append(LogEntry(self["_key"],methods[field_pattern],field,old_value,self[field]))
+                        break
                 else:
-                    old_value=self[field]
-                    self.method_dispatcher[methods[field]](self,field,other[field])
-                    log.append(LogEntry(self["_key"],methods[field],field,old_value,self[field]))
+                    bounced_fields.append(field)
             elif field in self and \
                     field in methods and \
                     methods[field]=="delete":
