@@ -286,6 +286,7 @@ class Render(YadataCommand):
                 time_now=datetime.datetime.now(),
                 extra=self.extra,
                 edge_tags=edge_tags,
+                time_now=datetime.datetime.now(),
             ))
 
 
