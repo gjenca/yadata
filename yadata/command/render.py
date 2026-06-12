@@ -14,6 +14,7 @@ from yadata.utils.misc import _yadata_log
 def strip_document_end_marker(s):
    if s.endswith('\n...\n'):
        return s[:-5]
+   return s
 
 def sortfilter(value,*args):
 
@@ -283,7 +284,6 @@ class Render(YadataCommand):
                 records_by_type=records_by_type,
                 record_by_tag_and_key=record_by_tag_and_key,
                 field_input=field_input,
-                time_now=datetime.datetime.now(),
                 extra=self.extra,
                 edge_tags=edge_tags,
                 time_now=datetime.datetime.now(),
