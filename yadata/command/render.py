@@ -121,12 +121,12 @@ class Render(YadataCommand):
             fstring_l=[]
             if type(value) in (int,float):
                 fstring_l.append(
-                        r'<input type="text" name="{name}" id="{name}" value="{value}">'
+                        r'<input type="text" name="{name}" id="{name}" value="{value}" autocomplete="off">'
                         )
             elif type(value) is str:
                 if textarea:
                     fstring_l.append(
-                            r'<textarea name="{name}" id="{name}" rows="6" cols="33">'
+                            r'<textarea name="{name}" id="{name}" rows="6" cols="33" autocomplete="off">'
                             )
                     fstring_l.append(
                             r'{value}'
@@ -136,17 +136,17 @@ class Render(YadataCommand):
                             )
                 else:
                     fstring_l.append(
-                            r'<input type="text" name="{name}" id="{name}" value="{value}">'
+                            r'<input type="text" name="{name}" id="{name}" value="{value}" autocomplete="off">'
                             )
             elif type(value) is bool:
-                fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
+                fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()" autocomplete="off">')
                 for opt in (True,False):
                     fstring_l.append(render_option(opt,opt==value))
                 fstring_l.append(r'</select>')
             else:
                 for otm in collect_otm(type(rec)):
                     if field==otm.fieldname:
-                        fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()">')
+                        fstring_l.append(r'<select name="{name}" id="{name}" onchange="this.form.submit()" autocomplete="off">')
                         value=rec.get(field,None)
                         fstring_l.append(render_option(None,value is None))
                         if value!=None:
