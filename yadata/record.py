@@ -178,6 +178,11 @@ class Record(dict,metaclass=MetaRecord):
 
         return sane_yaml.dump(self)
 
+    def stream_out(self,f=sys.stdout):
+
+        f.write('---\n')
+        f.write(self.to_yaml())
+
     def generate_keys(self):
 
         prefix=self.key()
