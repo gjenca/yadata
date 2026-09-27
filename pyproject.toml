@@ -17,6 +17,10 @@ typeguard = "^4.4.4"
 yadata = 'yadata.main:run'
 
 
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
