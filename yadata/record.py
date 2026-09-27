@@ -1,10 +1,8 @@
-import shutil
 import os
 import errno
 import tempfile
 import yadata.utils.sane_yaml as sane_yaml
-from yadata.utils.misc import _yadata_log
-from yadata.utils.compare import keys_to_cmp
+from yadata.utils.misc import _yadata_log,unique
 import yaml
 from collections import namedtuple
 import functools
@@ -13,8 +11,6 @@ import typing
 import typeguard
 import re
 import glob
-
-sys.path.insert(0,'')
 
 ManyToMany=namedtuple('ManyToMany',['fieldname','inverse_type','inverse_fieldname','sort_by','inverse_sort_by'])
 OneToMany=namedtuple('OneToMany',['fieldname','inverse_type','inverse_fieldname','inverse_sort_by'])
@@ -95,13 +91,19 @@ class MetaRecord(type):
 
             def cls_constructor(loader,node):
 
-                dict_value=loader.construct_mapping(node)
+                dict_value=loader.construct_mapping(node,deep=True)
                 return instance_class(dict_value)
 
             yaml.add_representer(instance_class,cls_representer)
             yaml.add_constructor(instance_class.yadata_tag,cls_constructor)
+            yaml.add_constructor(instance_class.yadata_tag,cls_constructor,Loader=sane_yaml.YadataLoader)
 
         return instance_class
+
+@functools.cache
+def _type_hints(cls):
+
+    return typing.get_type_hints(cls)
 
 @functools.cache
 def _matches(pat,s):
@@ -113,6 +115,7 @@ class Record(dict,metaclass=MetaRecord):
 """
 
     top_fields=[]
+    subdir=''
 
     def key(self):
 
@@ -128,7 +131,7 @@ class Record(dict,metaclass=MetaRecord):
     def __init__(self,*args,**kwargs):
         
         super(Record,self).__init__(*args,**kwargs)
-        hints=typing.get_type_hints(type(self))
+        hints=_type_hints(type(self))
         for key in hints:
             if key in self:
                 try:
@@ -147,7 +150,7 @@ class Record(dict,metaclass=MetaRecord):
 
     def __setitem__(self,key,value):
         
-        hints=typing.get_type_hints(type(self))
+        hints=_type_hints(type(self))
         if key in hints:
             try:
                 typeguard.check_type(value,hints[key])
@@ -207,10 +210,10 @@ class Record(dict,metaclass=MetaRecord):
             pathdir=os.path.join(datadir.dirname,self.subdir)
             mkdir_p(pathdir)
             self.path=os.path.join(pathdir,("%s.yaml" % self["_key"]))
-        f=tempfile.NamedTemporaryFile(delete=False,mode='w')
+        f=tempfile.NamedTemporaryFile(dir=os.path.dirname(self.path),suffix='.tmp',delete=False,mode='w')
         f.write(sane_yaml.dump(self))
         f.close()
-        shutil.move(f.name,self.path)
+        os.replace(f.name,self.path)
 
     
     def method_SET(self,field,value):
@@ -219,22 +222,16 @@ class Record(dict,metaclass=MetaRecord):
 
     def method_UNION(self,field,value):
 
-        self[field]=list(set(self[field]+value))
+        self[field]=unique(self[field]+value)
 
     def method_EXTEND(self,field,value):
 
         self[field].extend(value)
 
-    def method_DELETE(self,field,value=None):
-
-        del self[field]
-        self.dirty=True
-   
     method_dispatcher={
         "set":method_SET,
         "union":method_UNION,
         "extend":method_EXTEND,
-        "delete":method_DELETE,
     }
 
 
@@ -257,11 +254,6 @@ class Record(dict,metaclass=MetaRecord):
                         break
                 else:
                     bounced_fields.append(field)
-            elif field in self and \
-                    field in methods and \
-                    methods[field]=="delete":
-                del self[field]
-                self.dirty=True
         if bounced_fields:
             t_bounced=(type(self))(other)
             t_bounced['_key']=self['_key']

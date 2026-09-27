@@ -3,6 +3,7 @@ import re
 import datetime
 import yadata.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
+from markupsafe import escape
 from yadata.command.command import YadataCommand
 from yadata.utils.compare import make_key
 from yadata.utils.misc import Argument
@@ -65,7 +66,7 @@ class Render(YadataCommand):
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
         Argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates"),
         Argument("-s","--soft-references",action="store_true",help="do not fail for missing references"),
-        Argument("-p","--jinja-prefix",default="#",help="jinja2 line statement prefix (default: #, for markdown: %%)"),
+        Argument("-p","--jinja-prefix",help="jinja2 line statement prefix (default: #, for *.md templates: %%%%)"),
         Argument("template",help="template file"),
     )
 
@@ -74,8 +75,11 @@ class Render(YadataCommand):
 
     def __init__(self,ns):
         self.ns=ns
-        if self.ns.template.endswith('.md'):
-            self.ns.jinja_prefix='%%'
+        if self.ns.jinja_prefix is None:
+            if self.ns.template.endswith('.md'):
+                self.ns.jinja_prefix='%%'
+            else:
+                self.ns.jinja_prefix='#'
         if ns.extra_yaml:
             self.extra=sane_yaml.load(ns.extra_yaml)
         else:
@@ -105,8 +109,11 @@ class Render(YadataCommand):
                 attr_value='null'
                 show_value='--'
             elif type(value) is str:
-                attr_value=r'&quot;'+value+r'&quot;'
-                show_value=value
+                attr_value=r'&quot;'+escape(value)+r'&quot;'
+                show_value=escape(value)
+            else:
+                attr_value=escape(value)
+                show_value=escape(value)
             if selected:
                 return f'<option value="{attr_value}" selected="selected">{show_value}</option>'
             else:
@@ -117,7 +124,7 @@ class Render(YadataCommand):
             value=rec.get(field,None)
             name=';'.join((rec.yadata_tag[1:],rec['_key'],field))
             yaml_value=sane_yaml.dump(value)
-            yaml_value=strip_document_end_marker(yaml_value)
+            yaml_value=escape(strip_document_end_marker(yaml_value))
             fstring_l=[]
             if type(value) in (int,float):
                 fstring_l.append(

@@ -2,8 +2,7 @@ import sys
 
 from yadata.command.command import YadataCommand
 from yadata import Datadir,Record
-from yadata.utils.misc import describe_record, Argument, MexGroup
-from yadata.command.command import YadataCommand
+from yadata.utils.misc import Argument, MexGroup
 
 def _passthis(it):
     
@@ -27,10 +26,10 @@ class Merge(YadataCommand):
             dest="uname",action="append",default=[]),
         Argument("-s","--set",help="replace orginal value by new value",
             dest="sname",action="append",default=[]),
-        Argument("-d","--delete",help="delete this field",
-            dest="dname",action="append",default=[]),
-        Argument("-o","--old",action="store_true",help="write only existing records to a mergeable YAML stream; do not actually change datadir"),
-        Argument("-n","--new",action="store_true",help="write only new records to a mergeable YAML stream; do not actually change datadir"),
+        MexGroup(
+            Argument("-o","--old",action="store_true",help="write only existing records to a mergeable YAML stream; do not actually change datadir"),
+            Argument("-n","--new",action="store_true",help="write only new records to a mergeable YAML stream; do not actually change datadir"),
+        ),
         MexGroup(
             Argument("-v","--verbose",action="store_true",help="be verbose"),
             Argument("-q","--quiet",action="store_true",help="be quiet")
@@ -43,7 +42,7 @@ class Merge(YadataCommand):
     
     def __init__(self,ns):
         super(Merge,self).__init__(ns)
-        self.fields_to_change=self.ns.uname+self.ns.sname+self.ns.dname
+        self.fields_to_change=self.ns.uname+self.ns.sname
         if len(self.fields_to_change)>len(set(self.fields_to_change)):
             raise ValueError("merge: duplicite fieldnames in options")
         self.datadir=Datadir(self.ns.datadir)
@@ -51,7 +50,6 @@ class Merge(YadataCommand):
 
         for field_names,method_name in (
                 (self.ns.sname,"set"),
-                (self.ns.dname,"delete"),
                 (self.ns.uname,"union"),
             ):
             for field_name in field_names:

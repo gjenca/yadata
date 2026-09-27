@@ -6,6 +6,15 @@ def _yadata_log(*args,**kwargs):
     if 'YADATA_DEBUG' in os.environ and os.environ['YADATA_DEBUG']=='1':
         print(*args,**kwargs,file=sys.stderr)
 
+def unique(values):
+    """values without duplicates, in order of first occurrence; works for unhashable values"""
+
+    ret=[]
+    for value in values:
+        if value not in ret:
+            ret.append(value)
+    return ret
+
 def describe_record(i,rec):
     
     return "record no. %d (_key=%s)" % (i,rec.get("_key","None")) 

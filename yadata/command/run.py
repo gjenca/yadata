@@ -3,8 +3,7 @@ import os
 import subprocess
 
 from yadata.command.command import YadataCommand
-from yadata.utils.misc import describe_record, Argument, MexGroup
-from yadata.command.command import YadataCommand
+from yadata.utils.misc import Argument
 
 
 class Run(YadataCommand):
@@ -27,7 +26,7 @@ given by the record. For every field, the value is represented by 'YADATA_field=
             d=dict(os.environ)
             for field in rec:
                 d[f'YADATA_{field}']=f'{rec[field]}'
-            subprocess.Popen(self.ns.shell_command,shell=True,env=d)
+            subprocess.run(self.ns.shell_command,shell=True,env=d,check=False)
         return None
 
             

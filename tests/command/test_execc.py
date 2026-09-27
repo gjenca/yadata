@@ -10,7 +10,7 @@ class TryRecord(Record):
     def is_my_type(cls,d):
         return True
 
-MockExecNameSpace=namedtuple('MockExecNameSpace',['statement','no_output','failed','restrict','keep_going','module'])
+MockExecNameSpace=namedtuple('MockExecNameSpace',['statement','no_output','failed','restrict','keep_going','module','type'],defaults=[None])
 
 def test_exec_yes_output():
     

@@ -56,6 +56,8 @@ def run():
                 raise ValueError(f'subcommand {ns.command} without input data')
             it=command.execute(it)
         else:
+            if it is not None:
+                raise ValueError(f'subcommand {ns.command} does not read input data; it must be first in the pipeline')
             it=command.execute()
     if command.data_out:
         for rec in it:

@@ -1,10 +1,7 @@
-import os,sys,errno,re
+import os
 import yaml
-import unicodedata
-import tempfile
-import shutil
 from .record import Record,LogEntry
-import warnings
+import yadata.utils.sane_yaml as sane_yaml
 try:
     import _yadata_types 
 except ModuleNotFoundError:
@@ -16,6 +13,9 @@ class Datadir(list):
 
         list.append(self,rec)
         if "_key" in rec:
+            if rec["_key"] in self.keys:
+                other=self.keys[rec["_key"]]
+                raise ValueError(f'duplicate _key {rec["_key"]} in {other.path} and {rec.path}')
             self.keys[rec["_key"]]=rec
 
     def __init__(self,dirname):
@@ -29,7 +29,7 @@ class Datadir(list):
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
                         with open(path) as f:
-                            data=yaml.load(f,Loader=yaml.Loader)
+                            data=yaml.load(f,Loader=sane_yaml.YadataLoader)
                         if not issubclass(type(data),Record):
                             raise TypeError("File %s does not contain a Record subtype" % path)
                         data.path=path

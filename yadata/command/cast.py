@@ -1,6 +1,5 @@
 from yadata.command.command import YadataCommand
-import sys
-from yadata.utils.misc import describe_record, Argument
+from yadata.utils.misc import Argument
 try:
     import _yadata_types
 except ImportError:
@@ -20,7 +19,12 @@ class Cast(YadataCommand):
 
 
     def execute(self,it):
-        type_to_cast=getattr(_yadata_types,self.ns.type)
+        try:
+            type_to_cast=getattr(_yadata_types,self.ns.type)
+        except NameError:
+            raise ModuleNotFoundError("cast: no _yadata_types module in the current directory")
+        except AttributeError:
+            raise AttributeError(f"cast: no type {self.ns.type} in _yadata_types")
         for rec in it:
             yield type_to_cast(rec)
              

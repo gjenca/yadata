@@ -1,6 +1,6 @@
 from yadata.command.command import YadataCommand
 import sys
-from yadata.utils.misc import describe_record, Argument
+from yadata.utils.misc import describe_record, Argument, unique
 
 class Append(YadataCommand):
     """reads YAML stream, appends all strings in the list to the value of a field, outputs YAML stream
@@ -23,8 +23,7 @@ class Append(YadataCommand):
                 if type(value) is not list:
                     raise TypeError("append: expecting a list under %s in %s, got %s instead" %
                         (self.ns.fieldname,describe_record(i,rec),type(value)))
-                value.extend(self.ns.string)
-                value=list(set(value))
+                value=unique(value+list(self.ns.string))
                 rec[self.ns.fieldname]=value
             else:
                 rec[self.ns.fieldname]=[s for s in self.ns.string]

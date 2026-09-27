@@ -39,8 +39,6 @@ class Filter(YadataCommand):
                 tf=eval(self.ns.expr,d)
             except:
                 if self.ns.failed:
-                    if '__builtins__' in rec:    
-                        del rec['__builtins__']
                     yield rec
                 elif self.ns.keep_going:
                     exceptions+=1
@@ -53,7 +51,7 @@ class Filter(YadataCommand):
                     yield rec
 
         if exceptions and not self.ns.failed:
-            print("exec: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
+            print("filter: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
             
         
         

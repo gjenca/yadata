@@ -37,24 +37,24 @@ class Exec(YadataCommand):
             if self.ns.type and self.ns.type!=type(rec).__name__:
                 yield rec
                 continue
-            tf=True
-            if self.ns.restrict:
-                d=dict(rec)
-                d.update(self.mods)
-                d["_type"]=type(rec).__name__
-                tf=eval(self.ns.restrict,d)
-            if tf:
-                try:
+            try:
+                tf=True
+                if self.ns.restrict:
+                    d=dict(rec)
+                    d.update(self.mods)
+                    d["_type"]=type(rec).__name__
+                    tf=eval(self.ns.restrict,d)
+                if tf:
                     exec(self.ns.statement, self.mods,rec)
-                except:
-                    if self.ns.failed:
-                        yield rec
-                    elif self.ns.keep_going:
-                        exceptions+=1
-                        print("exec: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
-                        print("exec: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
-                    else:
-                        raise
+            except:
+                if self.ns.failed:
+                    yield rec
+                elif self.ns.keep_going:
+                    exceptions+=1
+                    print("exec: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
+                    print("exec: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
+                else:
+                    raise
             if not self.ns.no_output and not self.ns.failed:
                 yield rec
         if exceptions and not self.ns.failed:

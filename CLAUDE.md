@@ -28,12 +28,13 @@ Each command is a class inheriting `YadataCommand` with class-level `arguments` 
 | Command | Purpose |
 |---------|---------|
 | `read`  | Load records from a data directory (no stdin) |
-| `merge` | Merge stdin records into a data directory (set/union/delete/extend methods for conflict resolution) |
+| `merge` | Merge stdin records into a data directory (set/union methods for conflict resolution) |
 | `filter`| Keep records matching a Python expression (`eval`) |
 | `exec`  | Execute a Python statement on each record |
 | `yield` | Evaluate a Python term per record, output the result |
 | `sort`  | Sort records by field keys (supports `~field` for reverse) |
 | `cast`  | Convert plain dicts to typed Record subclasses |
+| `type`  | Keep only records of the given type(s) or their subclasses |
 | `append`| Append strings to a list field |
 | `render`| Render records through a Jinja2 template (no YAML output) |
 | `run`   | Run a shell command per record with `YADATA_` env vars |
@@ -44,7 +45,7 @@ Each command is a class inheriting `YadataCommand` with class-level `arguments` 
 - Type annotations checked at init and on `__setitem__` via `typeguard`
 - Dotted key access (`rec["a.b"]` traverses nested dicts)
 - Key generation via `key_format` class attribute or `get_key_prefix()` method
-- Merge with conflict resolution methods: `set`, `union`, `extend`, `delete`
+- Merge with conflict resolution methods: `set`, `union`, `extend`
 - Relationships via `@AddOneToMany` and `@AddManyToMany` decorators
 
 ### Custom Types (`_yadata_types`)
