@@ -40,3 +40,8 @@ def test_keys_to_cmp_two_keys_neg_a_neg_b():
     assert cmp_this(da1b2,da2b1)>0
     assert cmp_this(da1b1,da1b1)==0
     assert cmp_this(da2b1,da1b1)<0
+
+def test_make_key():
+
+    from yadata.utils.compare import make_key
+    assert sorted([da2b1,da1b2,da1b1],key=make_key(('a','~b')))==[da1b2,da1b1,da2b1]

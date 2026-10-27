@@ -56,3 +56,19 @@ def test_append_nonlist():
         iter_out=append_command.execute([t_in])
         t_out=next(iter_out)
     
+
+def test_append_keeps_order_and_dedupes():
+
+    ns=NameSpace()
+    ns.fieldname='fieldname'
+    ns.string=['c','a','d','d']
+    out=list(Append(ns).execute([TryRecord(fieldname=['b','a'])]))
+    assert out[0]['fieldname']==['b','a','c','d']
+
+def test_append_multiple_records():
+
+    ns=NameSpace()
+    ns.fieldname='f'
+    ns.string=['x']
+    out=list(Append(ns).execute([TryRecord(f=['a']),TryRecord()]))
+    assert [rec['f'] for rec in out]==[['a','x'],['x']]

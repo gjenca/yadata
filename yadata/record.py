@@ -226,7 +226,7 @@ class Record(dict,metaclass=MetaRecord):
 
     def method_EXTEND(self,field,value):
 
-        self[field].extend(value)
+        self[field]=self[field]+value
 
     method_dispatcher={
         "set":method_SET,

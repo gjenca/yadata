@@ -109,7 +109,7 @@ class Render(YadataCommand):
                 attr_value='null'
                 show_value='--'
             elif type(value) is str:
-                attr_value=r'&quot;'+escape(value)+r'&quot;'
+                attr_value=r'&quot;'+str(escape(value))+r'&quot;'
                 show_value=escape(value)
             else:
                 attr_value=escape(value)

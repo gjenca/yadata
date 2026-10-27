@@ -85,3 +85,40 @@ def test_filter_keep_going():
     iter_out=exec_command.execute([t_in_1,t_in_2,t_in_3])
     assert list(iter_out)==[t_should_out_1,t_should_out_2]
 
+
+class OtherRecord(Record):
+
+    yadata_tag='!FilterOtherRecord'
+
+def test_filter_type():
+
+    t_in=[TryRecord(n=1),OtherRecord(n=1),TryRecord(n=2)]
+    ns=MockFilterNameSpace(expr='n>1',failed=False,module=[],keep_going=False,type='TryRecord')
+    assert list(Filter(ns).execute(t_in))==[OtherRecord(n=1),TryRecord(n=2)]
+
+def test_filter_type_variable():
+
+    t_in=[TryRecord(n=1),OtherRecord(n=1)]
+    ns=MockFilterNameSpace(expr='_type=="OtherRecord"',failed=False,module=[],keep_going=False,type=None)
+    assert list(Filter(ns).execute(t_in))==[OtherRecord(n=1)]
+
+def test_filter_error_raises():
+
+    ns=MockFilterNameSpace(expr='missing',failed=False,module=[],keep_going=False,type=None)
+    with pytest.raises(NameError):
+        list(Filter(ns).execute([TryRecord()]))
+
+def test_filter_keep_going_message(capsys):
+
+    ns=MockFilterNameSpace(expr='missing',failed=False,module=[],keep_going=True,type=None)
+    assert list(Filter(ns).execute([TryRecord(_key='k')]))==[]
+    err=capsys.readouterr().err
+    assert 'filter: Warning: failed on record no. 0 (_key=k)' in err
+    assert 'filter: Warning: there were 1 exceptions' in err
+
+def test_filter_does_not_modify_records():
+
+    rec=TryRecord(n=1)
+    ns=MockFilterNameSpace(expr='n==1',failed=False,module=[],keep_going=False,type=None)
+    assert list(Filter(ns).execute([rec]))==[rec]
+    assert rec==TryRecord(n=1)

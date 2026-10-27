@@ -43,7 +43,7 @@ Each command is a class inheriting `YadataCommand` with class-level `arguments` 
 
 `Record` is a dict subclass with `MetaRecord` metaclass that auto-registers YAML tags (set `yadata_tag = 'auto'` to use `!ClassName`). Records support:
 - Type annotations checked at init and on `__setitem__` via `typeguard`
-- Dotted key access (`rec["a.b"]` traverses nested dicts)
+- Dotted key access (`rec["a.b.c"]` traverses nested Record instances; nested plain dicts are not supported)
 - Key generation via `key_format` class attribute or `get_key_prefix()` method
 - Merge with conflict resolution methods: `set`, `union`, `extend`
 - Relationships via `@AddOneToMany` and `@AddManyToMany` decorators

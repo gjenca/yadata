@@ -36,6 +36,8 @@ class Datadir(list):
                             data=yaml.load(f,Loader=sane_yaml.YadataLoader)
                         if not issubclass(type(data),Record):
                             raise TypeError("File %s does not contain a Record subtype" % path)
+                        if "_key" not in data:
+                            raise ValueError("File %s contains a record without _key" % path)
                         data.path=path
                         self.append(data)
         else:
