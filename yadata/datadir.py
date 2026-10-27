@@ -1,11 +1,15 @@
 import os
+import sys
 import yaml
 from .record import Record,LogEntry
 import yadata.utils.sane_yaml as sane_yaml
+if os.getcwd() not in sys.path:
+    sys.path.append(os.getcwd())
 try:
-    import _yadata_types 
-except ModuleNotFoundError:
-    pass
+    import _yadata_types
+except ModuleNotFoundError as mnfe:
+    if mnfe.name!='_yadata_types':
+        raise
 
 class Datadir(list):
 
