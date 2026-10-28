@@ -131,7 +131,7 @@ def test_dotted_key():
 def test_setitem_type_check():
 
     rec=MergeRecord(tags=['a'])
-    with pytest.raises(typeguard.TypeCheckError):
+    with pytest.raises(TypeError):
         rec['tags']=[1]
     assert rec['tags']==['a']
 

@@ -52,7 +52,7 @@ class Exec(YadataCommand):
                 elif self.ns.keep_going:
                     exceptions+=1
                     print("exec: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
-                    print("exec: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
+                    print("exec: The exception was %s: %s" % (sys.exc_info()[0].__name__, sys.exc_info()[1]), file=sys.stderr)
                 else:
                     raise
             if not self.ns.no_output and not self.ns.failed:

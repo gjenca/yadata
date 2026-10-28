@@ -177,7 +177,7 @@ def test_exec_restrict_error_failed():
 def test_exec_assignment_is_type_checked():
 
     import typeguard
-    with pytest.raises(typeguard.TypeCheckError):
+    with pytest.raises(TypeError):
         list(Exec(exec_ns('n="x"')).execute([TypedRecord(n=1)]))
 
 def test_exec_new_field():

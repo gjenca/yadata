@@ -110,6 +110,15 @@ def _matches(pat,s):
 
     return re.match(glob.translate(pat),s)
 
+class YadataOptional:
+    """ YadataOptional[T] accepts values of type T or the string '--', which yadata
+uses to mark a nonexistent value.
+"""
+
+    def __class_getitem__(cls,hint):
+
+        return typing.Union[hint,typing.Literal['--']]
+
 class Record(dict,metaclass=MetaRecord):
     """ Base class for all types of records.
 """
@@ -134,29 +143,36 @@ class Record(dict,metaclass=MetaRecord):
         hints=_type_hints(type(self))
         for key in hints:
             if key in self:
-                try:
-                    typeguard.check_type(self[key],hints[key])
-                except typeguard.TypeCheckError:
-                    raise TypeError(f'Expected {hints[key]} for {key} in {type(self)}, got {self[key]}')
+                self._check_field(key,self[key],hints[key])
         self.path=None
         self.dirty=False
-    
+
+    def _check_field(self,key,value,hint):
+        """ Raise TypeError if value does not match the type hint of field key.
+"""
+
+        try:
+            typeguard.check_type(value,hint)
+        except typeguard.TypeCheckError as exc:
+            where=type(self).__name__
+            if '_key' in self:
+                where+=f" (_key={dict.__getitem__(self,'_key')!r})"
+            expected=hint.__qualname__ if type(hint) is type else repr(hint).replace('typing.','')
+            raise TypeError(f'{where}: field {key!r} must be {expected}, '
+                            f'got {value!r} of type {type(value).__name__}: value {exc}') from exc
+
     def __new__(cls,*args,**kwargs):
 
         instance=super(Record,cls).__new__(cls,*args,**kwargs)
         for fieldname in cls._inverse:
-            instance[fieldname]=[]
+            dict.__setitem__(instance,fieldname,[])
         return instance
 
     def __setitem__(self,key,value):
         
         hints=_type_hints(type(self))
         if key in hints:
-            try:
-                typeguard.check_type(value,hints[key])
-            except typeguard.TypeCheckError:
-                print(f'Expected {hints[key]} for {key} in {type(self)}, got {value}',file=sys.stderr)
-                raise
+            self._check_field(key,value,hints[key])
         self.dirty=True
         super(Record,self).__setitem__(key,value)
 
